@@ -1,8 +1,9 @@
 package com.saucefan.stuff.readinglist.view
 
-import androidx.appcompat.app.AppCompatActivity
+import android.R.attr.fragment
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import com.saucefan.stuff.readinglist.R
 import com.saucefan.stuff.readinglist.model.Book
 import com.saucefan.stuff.readinglist.viewmodel.BookRepo.randBook
@@ -35,9 +36,13 @@ class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionList
         } else item.background = getDrawable(R.color.bgRegular)
         item.setOnClickListener {
             //intent stuff
-            val frag = EditFragment()
+            val frag = EditFragment.newInstance(book.title.toString(),book)
             val manager = supportFragmentManager
             val transaction = manager.beginTransaction()
+
+            val bundle = Bundle()
+            bundle.putSerializable(EDIT_BOOK, book)
+            frag.arguments=bundle
             transaction.add(frag, "Edit Fragment ${item.tag}")
             transaction.commit()
         }

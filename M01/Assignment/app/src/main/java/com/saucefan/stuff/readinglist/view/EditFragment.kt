@@ -1,13 +1,11 @@
 package com.saucefan.stuff.readinglist.view
 
 import android.content.Context
-import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TimePicker
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 
@@ -20,7 +18,7 @@ import timber.log.Timber
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_NAME = "param1"
-private const val ARG_BOOK = "param2"
+const val EDIT_BOOK = "param2"
 
 /**
  * A simple [Fragment] subclass.
@@ -40,7 +38,7 @@ class EditFragment : DialogFragment() {
         super.onCreate(savedInstanceState)
         arguments?.let {
             title = it.getString(ARG_NAME)
-            book = it.getSerializable(ARG_BOOK) as Book
+            book = it.getSerializable(EDIT_BOOK) as Book
         }
     }
 
@@ -59,8 +57,8 @@ class EditFragment : DialogFragment() {
             et_title.hint=it.title
             if(it.hasBeenRead==true) {
                 fragcl.background = resources.getDrawable(R.color.bgHightlight)
-                checkBox.setChecked(true)
-                checkBox.invalidate()
+                chkbox.setChecked(true)
+                chkbox.invalidate()
             }else fragcl.background=resources.getDrawable(R.color.bgRegular)
 
 
@@ -94,11 +92,11 @@ class EditFragment : DialogFragment() {
     companion object {
         // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
+        fun newInstance(param1: String, param2: Book) =
             EditFragment().apply {
                 arguments = Bundle().apply {
                     putString(ARG_NAME, param1)
-                    putString(ARG_BOOK, param2)
+                    putSerializable(EDIT_BOOK, param2)
                 }
             }
     }
