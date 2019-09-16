@@ -25,5 +25,12 @@
         app:layout_constraintStart_toStartOf="parent"
         android:text="whatever button"
         android:id="@+id/btn_whatever"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/btn_whatever"
+        app:layout_constraintStart_toStartOf="parent"
+        android:text="new item"
+        android:id="@+id/btn_newitem"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
