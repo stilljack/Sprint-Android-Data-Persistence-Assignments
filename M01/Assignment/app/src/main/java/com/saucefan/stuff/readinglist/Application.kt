@@ -3,11 +3,6 @@ package com.saucefan.stuff.readinglist
 import android.app.Application
 import timber.log.Timber
 
-/*// TODO: 5. Lazy initialization of a prefs object for Activities to use...
-val prefs: Prefs by lazy {
-    App.prefs!!
-}*/
-
 // TODO: 3. Extend Timber to include class, method, line numbers!
 class MyDebugTree : Timber.DebugTree() {
     override fun createStackElementTag(element: StackTraceElement): String? {
@@ -21,7 +16,7 @@ class MyDebugTree : Timber.DebugTree() {
 }
 
 class App : Application() {
-    
+
 
     override fun onCreate() {
         super.onCreate()
