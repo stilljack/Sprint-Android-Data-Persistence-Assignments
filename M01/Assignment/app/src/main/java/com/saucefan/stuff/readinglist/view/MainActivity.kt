@@ -10,6 +10,7 @@ import com.saucefan.stuff.readinglist.viewmodel.BookRepo.idCount
 import com.saucefan.stuff.readinglist.viewmodel.BookRepo.randBook
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.bookview.view.*
+import kotlinx.android.synthetic.main.fragment_edit.view.*
 
 
 class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionListener {
@@ -27,6 +28,7 @@ class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionList
             book.hasBeenRead*/
         book.id= ll.childCount.toString()
         var item = layoutInflater.inflate(R.layout.bookview, null, false)
+        item.tv_id_list.text=book.id
         item.tag=book
         item.title.text="${book.title}"
         item.reasonToRead.text="${book.reasonToRead}"

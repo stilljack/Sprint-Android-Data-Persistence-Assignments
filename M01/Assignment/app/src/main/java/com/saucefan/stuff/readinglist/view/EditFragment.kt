@@ -55,6 +55,7 @@ class EditFragment : DialogFragment() {
         book?.let {
             et_rtr.hint =it.reasonToRead
             et_title.hint=it.title
+            tv_id.text=it.id
             if(it.hasBeenRead==true) {
                 fragcl.background = resources.getDrawable(R.color.bgHightlight)
                 chkbox.setChecked(true)
