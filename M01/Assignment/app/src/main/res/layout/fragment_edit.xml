@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".view.EditFragment"
+    android:id="@+id/fragcl">
+
+    <!-- TODO: Update blank fragment layout -->
+<EditText
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:hint="title"
+    android:id="@+id/et_title"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintLeft_toLeftOf="parent"
+   />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="reason to read\n\n\n\n"
+        app:layout_constraintTop_toBottomOf="@id/et_title"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:id="@+id/et_rtr"/>
+    <androidx.appcompat.widget.AppCompatCheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="read?"
+        app:layout_constraintTop_toBottomOf="et_rtr"
+        app:layout_constraintRight_toRightOf="@id/et_rtr"
+        android:id="@+id/chkbox"/>
+    <androidx.appcompat.widget.AppCompatButton
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/et_rtr"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:id="@id/btn_submit"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,8 +1,9 @@
 package com.saucefan.stuff.readinglist.model
 
 import timber.log.Timber
+import java.io.Serializable
 
-class Book
+class Book: Serializable
 
 {
 

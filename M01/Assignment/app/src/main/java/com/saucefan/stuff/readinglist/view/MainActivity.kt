@@ -1,6 +1,7 @@
 package com.saucefan.stuff.readinglist.view
 
 import android.graphics.drawable.Drawable
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -16,7 +17,11 @@ import kotlinx.android.synthetic.main.bookview.*
 import kotlinx.android.synthetic.main.bookview.view.*
 import org.w3c.dom.Text
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionListener {
+    override fun onFragmentInteraction(book: Book) {
+
+    }
+
     var itemsInList = 0
 
 
@@ -27,15 +32,18 @@ class MainActivity : AppCompatActivity() {
             book.hasBeenRead*/
 
         var item = layoutInflater.inflate(R.layout.bookview, null, false)
-
+        item.tag=book
         item.title.text="${book.title}"
         item.reasonToRead.text="${book.reasonToRead}"
         if (book.hasBeenRead == true) {
             item.background= getDrawable(R.color.bgHightlight)
             item.checkBox.setChecked(true)
             item.checkBox.invalidate()
-
         } else item.background = getDrawable(R.color.bgRegular)
+        item.setOnClickListener {
+            //intent stuff
+
+        }
         return item
 
 
