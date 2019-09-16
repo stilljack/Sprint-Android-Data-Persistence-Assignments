@@ -1,21 +1,14 @@
 package com.saucefan.stuff.readinglist.view
 
-import android.graphics.drawable.Drawable
-import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.widget.LinearLayout
-import android.widget.TextView
-import androidx.annotation.ContentView
 import com.saucefan.stuff.readinglist.R
 import com.saucefan.stuff.readinglist.model.Book
 import com.saucefan.stuff.readinglist.viewmodel.BookRepo.randBook
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.bookview.*
 import kotlinx.android.synthetic.main.bookview.view.*
-import org.w3c.dom.Text
+
 
 class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionListener {
     override fun onFragmentInteraction(book: Book) {
@@ -42,7 +35,11 @@ class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionList
         } else item.background = getDrawable(R.color.bgRegular)
         item.setOnClickListener {
             //intent stuff
-
+            val frag = EditFragment()
+            val manager = supportFragmentManager
+            val transaction = manager.beginTransaction()
+            transaction.add(frag, "Edit Fragment ${item.tag}")
+            transaction.commit()
         }
         return item
 

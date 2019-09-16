@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TimePicker
 import android.widget.Toast
+import androidx.fragment.app.DialogFragment
 
 import com.saucefan.stuff.readinglist.R
 import com.saucefan.stuff.readinglist.model.Book
@@ -29,7 +30,7 @@ private const val ARG_BOOK = "param2"
  * Use the [EditFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class EditFragment : Fragment() {
+class EditFragment : DialogFragment() {
     // TODO: Rename and change types of parameters
     private var title: String? = null
     private var book: Book? = null
