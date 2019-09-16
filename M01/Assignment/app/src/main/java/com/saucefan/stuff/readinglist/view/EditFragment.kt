@@ -11,7 +11,6 @@ import androidx.fragment.app.DialogFragment
 
 import com.saucefan.stuff.readinglist.R
 import com.saucefan.stuff.readinglist.model.Book
-import kotlinx.android.synthetic.main.bookview.*
 import kotlinx.android.synthetic.main.fragment_edit.*
 import timber.log.Timber
 
@@ -33,6 +32,25 @@ class EditFragment : DialogFragment() {
     private var title: String? = null
     private var book: Book? = null
     private var listener: OnFragmentInteractionListener? = null
+
+
+    fun returnData():Book {
+
+        var newBook:Book=Book("blank title","blank reason",false,"-1")
+        if (!et_title.text.isNullOrBlank()){
+            newBook.title=et_title.text.toString()
+        } else Timber.e("title blank")
+        if (!et_rtr.text.isNullOrBlank()){
+            newBook.reasonToRead=et_rtr.text.toString()
+        }else Timber.e("rtr blank")
+        if(chkbox.isChecked){
+            newBook.hasBeenRead=true
+        }
+        newBook.id=tv_id.text.toString()
+        return newBook
+
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,13 +79,15 @@ class EditFragment : DialogFragment() {
                 chkbox.setChecked(true)
                 chkbox.invalidate()
             }else fragcl.background=resources.getDrawable(R.color.bgRegular)
-
-
         } ?: Toast.makeText(view.context,"book ain't good like",Toast.LENGTH_SHORT).show(); Timber.e("$book book is empty or bad")
+   btn_submit.setOnClickListener(){
+       listener?.onFragSave(returnData()) ?:Timber.e("THE LISTENER AIN'T A WORKING")
+   }
+
     }
 
     fun onButtonPressed(book: Book) {
-        listener?.onFragmentInteraction(book)
+        listener?.onFragSave(book)
     }
 
     override fun onAttach(context: Context) {
@@ -86,8 +106,7 @@ class EditFragment : DialogFragment() {
 
 
     interface OnFragmentInteractionListener {
-
-        fun onFragmentInteraction(book: Book)
+        fun onFragSave(book: Book)
     }
 
     companion object {

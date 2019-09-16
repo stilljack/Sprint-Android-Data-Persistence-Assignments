@@ -4,6 +4,7 @@ import android.R.attr.fragment
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.children
 import com.saucefan.stuff.readinglist.R
 import com.saucefan.stuff.readinglist.model.Book
 import com.saucefan.stuff.readinglist.viewmodel.BookRepo.idCount
@@ -14,7 +15,25 @@ import kotlinx.android.synthetic.main.fragment_edit.view.*
 
 
 class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionListener {
-    override fun onFragmentInteraction(book: Book) {
+    override fun onFragSave(book: Book) {
+
+
+        var found = false
+        for (view in ll.children) {
+            if (view.tag == book.id) {
+                found=true
+                view.title.text = book.title
+                view.reasonToRead.text = book.reasonToRead
+                view.tv_id_list.text = book.id
+                view.setOnClickListener {
+                    //intent stuff
+                    openFragForBook(book, view)
+                }
+            }
+        }
+        if (found==false) {
+            ll.addView(buildIemView(book))
+        }
 
     }
 
@@ -26,26 +45,30 @@ class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionList
             book.id
             book.reasonToRead
             book.hasBeenRead*/
-        book.id= ll.childCount.toString()
+
+        book.id = ll.childCount.toString()
         var item = layoutInflater.inflate(R.layout.bookview, null, false)
-        item.tv_id_list.text=book.id
-        item.tag=book
-        item.title.text="${book.title}"
-        item.reasonToRead.text="${book.reasonToRead}"
+        item.tv_id_list.text = book.id
+        item.tag = book.id
+        item.title.text = "${book.title}"
+        item.reasonToRead.text = "${book.reasonToRead}"
         if (book.hasBeenRead == true) {
-            item.background= getDrawable(R.color.bgHightlight)
+            item.background = getDrawable(R.color.bgHightlight)
             item.checkBox.setChecked(true)
             item.checkBox.invalidate()
         } else item.background = getDrawable(R.color.bgRegular)
+
+
+
         item.setOnClickListener {
             //intent stuff
             openFragForBook(book, item)
         }
         return item
-
-
-
     }
+
+
+
 
     private fun openFragForBook(
         book: Book,
@@ -54,7 +77,6 @@ class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionList
         val frag = EditFragment.newInstance(book.title.toString(), book)
         val manager = supportFragmentManager
         val transaction = manager.beginTransaction()
-
         val bundle = Bundle()
         bundle.putSerializable(EDIT_BOOK, book)
         frag.arguments = bundle

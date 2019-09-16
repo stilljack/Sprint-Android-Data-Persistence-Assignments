@@ -8,7 +8,7 @@ object BookRepo {
     //GOD HELP US IF WE LOSE TRACK
     //we will update idcount on save
     var idCount = 0
-
+    var bookList = mutableListOf<Book>()
     var fakeBooks = mutableListOf<Book>(
         Book("variables1","none",false,"0"),
         Book("variables2","less than none",true,"1"),
