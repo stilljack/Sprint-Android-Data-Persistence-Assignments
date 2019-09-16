@@ -16,8 +16,6 @@ import kotlinx.android.synthetic.main.fragment_edit.view.*
 
 class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionListener {
     override fun onFragSave(book: Book) {
-
-
         var found = false
         for (view in ll.children) {
             if (view.tag == book.id) {
@@ -88,7 +86,7 @@ class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionList
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         btn_whatever.setOnClickListener {
-            ll.addView(buildIemView(randBook()))
+            ll.addView(buildIemView(randBook(ll.childCount.toString())))
         }
 
         btn_newitem.setOnClickListener {

@@ -22,7 +22,9 @@ object BookRepo {
         Book("variables10","too much",true,"9")
         )
 
-    fun randBook(): Book {
-       return fakeBooks[Random.nextInt(0, fakeBooks.size)]
+    fun randBook(string:String): Book {
+        var book=fakeBooks[Random.nextInt(0, fakeBooks.size)]
+        book.id=string
+       return book
     }
 }
