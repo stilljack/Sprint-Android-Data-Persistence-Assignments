@@ -2,7 +2,7 @@ package com.saucefan.stuff.readinglist.model
 
 import timber.log.Timber
 
-class book
+class Book
 
 {
 
@@ -48,7 +48,19 @@ override fun toString(): String {
     }
     fun toCsvString(): String {
         Timber.i("CSVtoSTRING: $title,${reasonToRead?.replace(",","~@")},$hasBeenRead,$id")
-        return "$title,$reasonToRead,$hasBeenRead,$id"
+        if (title.isNullOrBlank()) {
+            Timber.e("title is null or blank **$title**")
+            this.title="no title"
+        }
+        if(reasonToRead.isNullOrBlank()){
+            Timber.e("RtR is null or blank **$reasonToRead**")
+            this.reasonToRead="no RtR"
+        }
+        if (id.isNullOrBlank()) {
+            Timber.e("id is null or blank **$id**")
+            this.id = "0"
+        }
+        return "$title,${reasonToRead?.replace(",","~@")},$hasBeenRead,$id"
     }
 
 
