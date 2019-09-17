@@ -10,13 +10,13 @@ class Book: Serializable
     var title: String? = null
     var reasonToRead: String? = null
     var hasBeenRead: Boolean? = null
-    var id: String = ""
+    var id: Int = 0
 
     constructor(
         title:String,
         reasonToRead:String,
         hasBeenRead:Boolean,
-        id:String
+        id:Int
     ) {
         this.title = title
         this.reasonToRead = reasonToRead
@@ -33,7 +33,7 @@ class Book: Serializable
             // unescape them
                 this.reasonToRead = values[1].replace("~@",",")
                 this.hasBeenRead = values[2].toBoolean()
-                this.id = id
+                this.id = values[4].toInt()
         }
         else {
             Timber.e("csv2obj error $this ${this.title} / ${this.reasonToRead} / ${this.hasBeenRead} / ${this.id}")
@@ -57,10 +57,10 @@ override fun toString(): String {
             Timber.e("RtR is null or blank **$reasonToRead**")
             this.reasonToRead="no RtR"
         }
-        if (id.isNullOrBlank()) {
-            Timber.e("id is null or blank **$id**")
-            this.id = "0"
-        }
+        //TODO ID CHECKEROONIE
+           // Timber.e("id is null or blank **$id**")
+          //  this.id = 0
+
         return "$title,${reasonToRead?.replace(",","~@")},$hasBeenRead,$id"
     }
 

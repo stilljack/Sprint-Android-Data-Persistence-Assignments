@@ -10,7 +10,7 @@ class SharedPrefsDao (context:Context){
 
         const val NEXT_ID="NEXTID"
         const val ID_LIST="IDLIST"
-        const val INVALID_ID="-1"
+        const val INVALID_ID=-1
         const val ENTRY_ID_PREFIX ="@"
         const val READING_PREFS="SAUCE"
     }
@@ -20,10 +20,10 @@ class SharedPrefsDao (context:Context){
         if (book.id == INVALID_ID && !ids.contains(book.id.toString())) {
             val editor = sharedPrefs.edit()
             var nextID = sharedPrefs.getInt(NEXT_ID, 0)
-            book.id = nextID.toString()
+            book.id = nextID
             editor.putInt(NEXT_ID, nextID++)
 
-            ids.add(book.id)
+            ids.add(book.id.toString())
             val newIdList = StringBuilder()
             for (id in ids) {
                 newIdList.append(id).append(",")

@@ -1,29 +1,24 @@
 package com.saucefan.stuff.readinglist.view
 
-import android.R.attr.fragment
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.children
+import com.saucefan.stuff.readinglist.App.Companion.prefs
 import com.saucefan.stuff.readinglist.R
 import com.saucefan.stuff.readinglist.model.Book
-import com.saucefan.stuff.readinglist.prefs
-import com.saucefan.stuff.readinglist.viewmodel.BookRepo.getNewID
-import com.saucefan.stuff.readinglist.viewmodel.BookRepo.idCount
 import com.saucefan.stuff.readinglist.viewmodel.BookRepo.randBook
 import com.saucefan.stuff.readinglist.viewmodel.SharedPrefsDao
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.bookview.view.*
-import kotlinx.android.synthetic.main.fragment_edit.view.*
 import timber.log.Timber
+import timber.log.Timber.i
 
 
 class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionListener {
 
     private var entryList = mutableListOf<Book>()
     override fun onFragSave(book: Book) {
-        prefs.createEntry(book)
+        prefs?.createEntry(book)
         //this is all repeat code, lets finish this like the preferences app
        /* var found = false
         for (view in ll.children) {
@@ -134,9 +129,7 @@ class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionList
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        if (prefs.readAllEntries().isNullOrEmpty()){
-            prefs.createEntry(Book("edit title","enter a reason to read",false,"-1"))
-        }else entryList = prefs.readAllEntries()
+        val prefs = SharedPrefsDao(this)
         btn_whatever.setOnClickListener {
             ll.addView(buildIemView(randBook()))
         }
@@ -145,7 +138,9 @@ class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionList
             // to open up the same ol' edit fragment with a new book object
             openFragForBook(Book("Enter title","Enter Reason to Read",false,ll.childCount.toString()),btn_newitem)
         }
-
+        if (prefs.readAllEntries().isNullOrEmpty()){
+            prefs.createEntry(Book("edit title","enter a reason to read",false,"-1"))
+        }else entryList = prefs.readAllEntries() ?:  mutableListOf<Book>(); i("we yelling timber")
 
     }
 }
