@@ -11,6 +11,7 @@ import androidx.fragment.app.DialogFragment
 
 import com.saucefan.stuff.readinglist.R
 import com.saucefan.stuff.readinglist.model.Book
+import com.saucefan.stuff.readinglist.viewmodel.BookRepo.getNewID
 import kotlinx.android.synthetic.main.fragment_edit.*
 import timber.log.Timber
 import timber.log.Timber.i
@@ -35,20 +36,18 @@ class EditFragment : DialogFragment() {
     private var listener: OnFragmentInteractionListener? = null
 
 
-    fun returnData():Book {
+    fun returnData(book:Book):Book {
 
-        var newBook:Book=Book("blank title","blank reason",false,-1)
         if (!et_title.text.isNullOrBlank()){
-            newBook.title=et_title.text.toString()
+            book.title=et_title.text.toString()
         } else Timber.e("title blank")
         if (!et_rtr.text.isNullOrBlank()){
-            newBook.reasonToRead=et_rtr.text.toString()
+            book.reasonToRead=et_rtr.text.toString()
         }else Timber.e("rtr blank")
         if(chkbox.isChecked){
-            newBook.hasBeenRead=true
+            book.hasBeenRead=true
         }
-        newBook.id=tv_id.text.toString().toInt()
-        return newBook
+        return book
 
     }
 
@@ -101,7 +100,7 @@ class EditFragment : DialogFragment() {
             }
         } ?: Toast.makeText(view.context,"book ain't good like",Toast.LENGTH_SHORT).show(); Timber.e("$book book is empty or bad")
    btn_submit.setOnClickListener(){
-       listener?.onFragSave(returnData()) ?:Timber.e("THE LISTENER AIN'T A WORKING")
+       listener?.onFragSave(returnData(book as Book)) ?:Timber.e("THE LISTENER AIN'T A WORKING")
 
    }
 

@@ -5,6 +5,9 @@ import android.content.SharedPreferences
 import com.saucefan.stuff.readinglist.model.Book
 
 class SharedPrefsDao (context:Context) : StorageInterface{
+    override fun deleteEntry(book: Book) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     companion object {
 
@@ -16,7 +19,7 @@ class SharedPrefsDao (context:Context) : StorageInterface{
     }
 
 
-      fun createEntry(book: Book) {
+    override fun createEntry(book: Book) {
         val ids = getListOfIds()
         if (book.id == INVALID_ID && !ids.contains(book.id.toString())) {
             val editor = sharedPrefs.edit()
@@ -60,7 +63,7 @@ class SharedPrefsDao (context:Context) : StorageInterface{
                 Book(entryAsCsv)
             }
         }
-        fun readAllEntries(): MutableList<Book> {
+      override  fun readAllEntries(): MutableList<Book> {
             val listOfId = getListOfIds()
             val entryList = mutableListOf<Book>()
             for (id in listOfId) {
@@ -72,13 +75,10 @@ class SharedPrefsDao (context:Context) : StorageInterface{
             }
             return entryList
         }
-        fun updateEntry(entry:Book): Book{
+    override   fun updateEntry(entry:Book){
             val editor = sharedPrefs.edit()
             editor.putString(ENTRY_ID_PREFIX + entry.id, entry.toCsvString())
 
-
-
-            return entry
         }
     }
 
