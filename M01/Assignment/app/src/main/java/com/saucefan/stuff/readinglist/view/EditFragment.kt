@@ -46,7 +46,7 @@ class EditFragment : DialogFragment() {
         }else Timber.e("rtr blank")
         if(chkbox.isChecked){
             book.hasBeenRead=true
-        }
+        } else book.hasBeenRead=false
         return book
 
     }

@@ -1,5 +1,8 @@
 package com.saucefan.stuff.readinglist.model
 
+import com.saucefan.stuff.readinglist.viewmodel.BookRepo.getNewID
+import org.json.JSONException
+import org.json.JSONObject
 import timber.log.Timber
 import java.io.Serializable
 
@@ -11,6 +14,25 @@ class Book: Serializable
     var reasonToRead: String? = null
     var hasBeenRead: Boolean? = null
     var id: Int = 0
+
+    constructor(jsonObject: JSONObject) {
+        try{
+        this.title =jsonObject.getString("title")
+        }catch (e:JSONException) {
+            this.title="badjson"
+        }
+        try {
+            this.reasonToRead = jsonObject.getString("reasonToRead")
+        }catch (e:JSONException) {
+            this.reasonToRead="badjson"
+        }
+        try{
+        this.hasBeenRead=jsonObject.getBoolean("hasBeenRead")
+    }catch (e:JSONException) {
+    this.hasBeenRead=false
+}
+        this.id=getNewID()
+    }
 
     constructor(
         title:String,

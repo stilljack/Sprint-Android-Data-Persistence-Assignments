@@ -3,9 +3,12 @@ package com.lambdaschool.sharedprefs
 import android.content.Context
 import android.os.Environment
 import com.lambdaschool.sharedprefs.model.JournalEntry
+import org.json.JSONException
+import org.json.JSONObject
 import java.io.*
 
 class JournalFileRepo (var context: Context):JournalRepoInterface {
+
     val filelist:ArrayList<String>
         get(){
             val fileNames = arrayListOf<String>()
@@ -29,9 +32,16 @@ class JournalFileRepo (var context: Context):JournalRepoInterface {
 
         for(filename in filelist) {
             val json = readFromFile(filename)
+            try {
+                entries.add(JournalEntry(JSONObject(json)))
+            } catch (e: JSONException) {
+                e.printStackTrace()
+            }
+        }
+        return entries
         }
 
-    }
+
 
 
     private fun readFromFile (filename:String):String{

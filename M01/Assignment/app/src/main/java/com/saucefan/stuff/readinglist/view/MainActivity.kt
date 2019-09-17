@@ -11,7 +11,6 @@ import com.saucefan.stuff.readinglist.model.Book
 import com.saucefan.stuff.readinglist.viewmodel.BookRepo.getNewID
 import com.saucefan.stuff.readinglist.viewmodel.BookRepo.randBook
 import com.saucefan.stuff.readinglist.viewmodel.LocalFiles
-import com.saucefan.stuff.readinglist.viewmodel.SharedPrefsDao
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.bookview.view.*
 
@@ -29,7 +28,7 @@ class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionList
 
     private var entryList = mutableListOf<Book>()
     override fun onFragSave(book: Book) {
-        SharedPrefsDao(this).createEntry(book)
+        //SharedPrefsDao(this).createEntry(book)
         var found=false
         for (view in ll.children) {
             if (view.tag == book.id) {
