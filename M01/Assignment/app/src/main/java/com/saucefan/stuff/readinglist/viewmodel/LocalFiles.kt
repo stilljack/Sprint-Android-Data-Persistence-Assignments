@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Environment
 import com.google.gson.Gson
 import com.saucefan.stuff.readinglist.model.Book
+import com.saucefan.stuff.readinglist.viewmodel.BookRepo.getNewID
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.*
@@ -105,6 +106,7 @@ class LocalFiles(var context: Context) :StorageInterface {
             if (json!="") {
                 try {
                     var theSauce = gson.fromJson(json,Book::class.java)
+                    theSauce.id = getNewID()
                     books.add(theSauce)
                 }catch (e: JSONException) {
                     e.printStackTrace()
