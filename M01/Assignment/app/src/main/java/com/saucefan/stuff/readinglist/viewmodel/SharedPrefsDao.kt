@@ -75,9 +75,9 @@ class SharedPrefsDao (context:Context) : StorageInterface{
             }
             return entryList
         }
-    override   fun updateEntry(entry:Book){
+    override fun updateEntry(book:Book){
             val editor = sharedPrefs.edit()
-            editor.putString(ENTRY_ID_PREFIX + entry.id, entry.toCsvString())
+            editor.putString(ENTRY_ID_PREFIX + book.id, book.toCsvString())
 
         }
     }

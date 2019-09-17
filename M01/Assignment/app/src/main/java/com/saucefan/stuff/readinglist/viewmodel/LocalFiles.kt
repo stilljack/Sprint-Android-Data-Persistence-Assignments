@@ -2,11 +2,15 @@ package com.saucefan.stuff.readinglist.viewmodel
 
 import android.content.Context
 import android.os.Environment
+import com.google.gson.Gson
 import com.saucefan.stuff.readinglist.model.Book
-import java.io.File
+import org.json.JSONException
+import org.json.JSONObject
+import java.io.*
 
 class LocalFiles(var context: Context) :StorageInterface {
     //check permissions
+    val gson= Gson()
     val isExternalStorageWriteable:Boolean
         get() {
             val state = Environment.getExternalStorageState()
@@ -42,21 +46,78 @@ class LocalFiles(var context: Context) :StorageInterface {
             }
             return fileNames
         }
+    private fun readFromFile (filename:String):String{
+        val inputFile = File(storageDirectory,filename)
+        var readString:String? = null
+        var reader: FileReader? = null
+        try {
+            reader = FileReader(inputFile)
+            readString =reader.readText()
+        } catch (e: FileNotFoundException)
+        {
+            e.printStackTrace()
+        }
+        catch (e: IOException)
+        {
+            e.printStackTrace()
+        }
+        finally {
+            if (reader!=null) {
+                reader.close()
+            }
+        }
+        return readString ?: ""
 
-
-
-    override fun createEntry(book: Book) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
+    private fun writeToFile(filename: String, entryString: String) {
+        val dir = storageDirectory
+        val outputFile = File(dir, filename)
+        //heres the the guy doing all the work
+        var writer: FileWriter? = null
+        //this seems fine
+        try {
+            writer = FileWriter(outputFile)
+            writer.write(entryString)
+        } catch (e: IOException) {
+            e.printStackTrace()
+        } finally {
+
+            //remember to close
+            if (writer != null) {
+                try {
+                    writer.close()
+                } catch (e2: IOException) {
+                    e2.printStackTrace()
+                }
+            }
+        }
+    }
+    override fun createEntry(book: Book) {
+            val bookString=gson.toJson(book)
+            val filename = book.title+".json"
+            writeToFile(filename,bookString)
+         }
 
     override fun readAllEntries(): MutableList<Book> {
-        return mutableListOf<Book>()
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+        val books= mutableListOf<Book>()
+        for (file in filelist) {
+            val json = readFromFile(file)
+            if (json!="") {
+                try {
+                    var theSauce = gson.fromJson(json,Book::class.java)
+                    books.add(theSauce)
+                }catch (e: JSONException) {
+                    e.printStackTrace()
+                }
+            }
+        }
+        return books
+        }
 
     override fun updateEntry(book: Book) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+        // should be just create
+        createEntry(book)
+             }
 
     override fun deleteEntry(book: Book) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.

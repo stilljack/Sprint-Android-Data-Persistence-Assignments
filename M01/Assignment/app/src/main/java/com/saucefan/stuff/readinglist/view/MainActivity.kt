@@ -11,6 +11,7 @@ import com.saucefan.stuff.readinglist.model.Book
 import com.saucefan.stuff.readinglist.viewmodel.BookRepo.getNewID
 import com.saucefan.stuff.readinglist.viewmodel.BookRepo.randBook
 import com.saucefan.stuff.readinglist.viewmodel.LocalFiles
+import com.saucefan.stuff.readinglist.viewmodel.StorageInterface
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.bookview.view.*
 
@@ -48,6 +49,7 @@ class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionList
         }
         if (!found) {
             ll.addView(buildIemView(book))
+            localFiles?.createEntry(book) ?: i("shoot localfiles is borked on save")
             entryList.add(book)
             val manager = supportFragmentManager
             var list:DialogFragment = manager.findFragmentByTag("Edit Fragment") as DialogFragment
@@ -161,7 +163,7 @@ class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionList
         }
 
         localFiles= LocalFiles(this)
-        entryList = localFiles!!.readAllEntries()
+        entryList = localFiles?.readAllEntries() as MutableList<Book>
         entryList.forEach { entry ->
             ll.addView(buildIemView(entry))
         }
