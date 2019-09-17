@@ -37,7 +37,7 @@ class EditFragment : DialogFragment() {
 
     fun returnData():Book {
 
-        var newBook:Book=Book("blank title","blank reason",false,"-1")
+        var newBook:Book=Book("blank title","blank reason",false,-1)
         if (!et_title.text.isNullOrBlank()){
             newBook.title=et_title.text.toString()
         } else Timber.e("title blank")
@@ -47,7 +47,7 @@ class EditFragment : DialogFragment() {
         if(chkbox.isChecked){
             newBook.hasBeenRead=true
         }
-        newBook.id=tv_id.text.toString()
+        newBook.id=tv_id.text.toString().toInt()
         return newBook
 
     }
@@ -74,7 +74,7 @@ class EditFragment : DialogFragment() {
         book?.let {
             et_rtr.hint =it.reasonToRead
             et_title.hint=it.title
-            tv_id.text=it.id
+            tv_id.text=it.id.toString()
             if(it.hasBeenRead==true) {
                 fragcl.background = resources.getDrawable(R.color.bgHightlight)
                 chkbox.setChecked(true)
@@ -102,6 +102,7 @@ class EditFragment : DialogFragment() {
         } ?: Toast.makeText(view.context,"book ain't good like",Toast.LENGTH_SHORT).show(); Timber.e("$book book is empty or bad")
    btn_submit.setOnClickListener(){
        listener?.onFragSave(returnData()) ?:Timber.e("THE LISTENER AIN'T A WORKING")
+
    }
 
     }

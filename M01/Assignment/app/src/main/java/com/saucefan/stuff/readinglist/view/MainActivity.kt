@@ -16,9 +16,17 @@ import timber.log.Timber.i
 
 class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionListener {
 
+    fun refreshCrappyRecycleView () {
+        ll.removeAllViews()
+        entryList.forEach { entry ->
+            ll.addView(buildIemView(entry))
+        }
+    }
+
     private var entryList = mutableListOf<Book>()
     override fun onFragSave(book: Book) {
-        prefs?.createEntry(book)
+        SharedPrefsDao(this).createEntry(book)
+        refreshCrappyRecycleView()
         //this is all repeat code, lets finish this like the preferences app
        /* var found = false
         for (view in ll.children) {
@@ -78,7 +86,7 @@ class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionList
     }
     fun buildIemView(book: Book): View {
         var item = layoutInflater.inflate(R.layout.bookview, null, false)
-        item.tv_id_list.text = book.id
+        item.tv_id_list.text = book.id.toString()
         item.tag = book.id
         item.title.text = "${book.title}"
         item.reasonToRead.text = "${book.reasonToRead}"
@@ -136,11 +144,11 @@ class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionList
         btn_newitem.setOnClickListener {
             //making a new item is the same thing as editing an old item with default prompts, hence, to make a new item we're just going
             // to open up the same ol' edit fragment with a new book object
-            openFragForBook(Book("Enter title","Enter Reason to Read",false,ll.childCount.toString()),btn_newitem)
+            openFragForBook(Book("Enter title","Enter Reason to Read",false,-1),btn_newitem)
         }
-        if (prefs.readAllEntries().isNullOrEmpty()){
-            prefs.createEntry(Book("edit title","enter a reason to read",false,"-1"))
-        }else entryList = prefs.readAllEntries() ?:  mutableListOf<Book>(); i("we yelling timber")
+       /* if (prefs.readAllEntries().isNullOrEmpty()){
+            prefs.createEntry(Book("edit title","enter a reason to read",false,-1))
+        }else */entryList = prefs.readAllEntries() ?:  mutableListOf<Book>(); i("we yelling timber")
 
     }
 }

@@ -15,13 +15,13 @@ class SharedPrefsDao (context:Context){
         const val READING_PREFS="SAUCE"
     }
 
-    fun createEntry(book: Book) {
+    infix fun createEntry(book: Book) {
         val ids = getListOfIds()
         if (book.id == INVALID_ID && !ids.contains(book.id.toString())) {
             val editor = sharedPrefs.edit()
-            var nextID = sharedPrefs.getInt(NEXT_ID, 0)
-            book.id = nextID
-            editor.putInt(NEXT_ID, nextID++)
+            var nextID =sharedPrefs.getInt(NEXT_ID, 0)
+           book.id = nextID
+            editor.putInt(NEXT_ID, ++book.id)
 
             ids.add(book.id.toString())
             val newIdList = StringBuilder()
@@ -29,7 +29,6 @@ class SharedPrefsDao (context:Context){
                 newIdList.append(id).append(",")
             }
             editor.putString(NEXT_ID, newIdList.toString())
-
             editor.putString(ENTRY_ID_PREFIX + book.id, book.toCsvString())
             editor.apply()
         } else {
