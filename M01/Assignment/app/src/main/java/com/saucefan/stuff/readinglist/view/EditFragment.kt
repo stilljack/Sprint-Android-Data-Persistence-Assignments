@@ -13,6 +13,7 @@ import com.saucefan.stuff.readinglist.R
 import com.saucefan.stuff.readinglist.model.Book
 import kotlinx.android.synthetic.main.fragment_edit.*
 import timber.log.Timber
+import timber.log.Timber.i
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -78,7 +79,26 @@ class EditFragment : DialogFragment() {
                 fragcl.background = resources.getDrawable(R.color.bgHightlight)
                 chkbox.setChecked(true)
                 chkbox.invalidate()
-            }else fragcl.background=resources.getDrawable(R.color.bgRegular)
+            }else {
+                fragcl.background=resources.getDrawable(R.color.bgRegular)
+                chkbox.setChecked(false)
+                chkbox.invalidate()
+            }
+            chkbox.setOnClickListener {
+                if(chkbox.isChecked) {
+                    chkbox.background=resources.getDrawable(R.color.bgRegular)
+                    fragcl.background=resources.getDrawable(R.color.bgRegular)
+                    //chkbox.isChecked=false
+                   // chkbox.invalidate()
+                    book?.hasBeenRead=false //?: i("failure at chkbox")
+                }else {
+                    chkbox.background = resources.getDrawable(R.color.bgHightlight)
+                    fragcl.background = resources.getDrawable(R.color.bgHightlight)
+                   // chkbox.isChecked=true
+                    //chkbox.invalidate()
+                    book?.hasBeenRead=true// ?: i("failure at chkbox")
+                }
+            }
         } ?: Toast.makeText(view.context,"book ain't good like",Toast.LENGTH_SHORT).show(); Timber.e("$book book is empty or bad")
    btn_submit.setOnClickListener(){
        listener?.onFragSave(returnData()) ?:Timber.e("THE LISTENER AIN'T A WORKING")
