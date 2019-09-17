@@ -17,10 +17,11 @@ class SharedPrefsDao (context:Context){
 
     infix fun createEntry(book: Book) {
         val ids = getListOfIds()
-        if (book.id == INVALID_ID && !ids.contains(book.id.toString())) {
+        val any = if (book.id == INVALID_ID && !ids.contains(book.id.toString())) {
             val editor = sharedPrefs.edit()
-            var nextID =sharedPrefs.getInt(NEXT_ID, 0)
-           book.id = nextID
+
+            var nextID = sharedPrefs.getInt(NEXT_ID, 0)
+            book.id = nextID?.toInt() ?: 0
             editor.putInt(NEXT_ID, ++book.id)
 
             ids.add(book.id.toString())
