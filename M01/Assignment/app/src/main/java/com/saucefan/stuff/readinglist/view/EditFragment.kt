@@ -12,6 +12,8 @@ import androidx.fragment.app.DialogFragment
 import com.saucefan.stuff.readinglist.R
 import com.saucefan.stuff.readinglist.model.Book
 import com.saucefan.stuff.readinglist.viewmodel.BookRepo.getNewID
+import com.saucefan.stuff.readinglist.viewmodel.BookRepo.titleChanged
+import com.saucefan.stuff.readinglist.viewmodel.BookRepo.titleChangedBool
 import kotlinx.android.synthetic.main.fragment_edit.*
 import timber.log.Timber
 import timber.log.Timber.i
@@ -39,7 +41,10 @@ class EditFragment : DialogFragment() {
     fun returnData(book:Book):Book {
 
         if (!et_title.text.isNullOrBlank()){
+            //if this is the case, we'll need to delete the old file, so...
+            titleChangedBool=true
             book.title=et_title.text.toString()
+
         } else Timber.e("title blank")
         if (!et_rtr.text.isNullOrBlank()){
             book.reasonToRead=et_rtr.text.toString()
@@ -58,6 +63,7 @@ class EditFragment : DialogFragment() {
             title = it.getString(ARG_NAME)
             book = it.getSerializable(EDIT_BOOK) as Book
         }
+
     }
 
     override fun onCreateView(
@@ -101,8 +107,11 @@ class EditFragment : DialogFragment() {
         } ?: Toast.makeText(view.context,"book ain't good like",Toast.LENGTH_SHORT).show(); Timber.e("$book book is empty or bad")
    btn_submit.setOnClickListener(){
        listener?.onFragSave(returnData(book as Book)) ?:Timber.e("THE LISTENER AIN'T A WORKING")
-
    }
+        btn_delete.setOnClickListener{
+            listener?.onDelete(book as Book)
+            dismiss()
+        }
 
     }
 
@@ -127,6 +136,7 @@ class EditFragment : DialogFragment() {
 
     interface OnFragmentInteractionListener {
         fun onFragSave(book: Book)
+        fun onDelete(book:Book)
     }
 
     companion object {

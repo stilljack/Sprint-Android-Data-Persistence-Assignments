@@ -6,8 +6,10 @@ import com.google.gson.Gson
 import com.saucefan.stuff.readinglist.model.Book
 import com.saucefan.stuff.readinglist.viewmodel.BookRepo.getNewID
 import org.json.JSONException
-import org.json.JSONObject
 import java.io.*
+
+
+
 
 class LocalFiles(var context: Context) :StorageInterface {
     //check permissions
@@ -122,6 +124,14 @@ class LocalFiles(var context: Context) :StorageInterface {
              }
 
     override fun deleteEntry(book: Book) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val dir = storageDirectory
+        val filename =book.title+".json"
+        val file = File(dir,filename)
+        if (file.exists()) {
+            file.canonicalFile.delete()
+            if (file.exists()) {
+                context.deleteFile(file.name)
+            }
+        }
     }
 }

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fragcl"
     android:layout_width="400dp"
-    android:layout_height="match_parent"
+    android:layout_height="300dp"
     tools:context=".view.EditFragment"
     android:background="@color/bgRegular">
 
@@ -54,7 +54,16 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@id/et_rtr"
         android:elevation="2dp"/>
-
+<androidx.appcompat.widget.AppCompatButton
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="d"
+    app:layout_constraintEnd_toEndOf="@id/btn_submit"
+    app:layout_constraintBottom_toTopOf="@+id/btn_submit"
+    android:padding="0dp"
+    android:elevation="2dp"
+    android:id="@+id/btn_delete"
+    />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

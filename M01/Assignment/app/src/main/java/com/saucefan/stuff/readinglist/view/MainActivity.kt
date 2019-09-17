@@ -10,14 +10,25 @@ import com.saucefan.stuff.readinglist.R
 import com.saucefan.stuff.readinglist.model.Book
 import com.saucefan.stuff.readinglist.viewmodel.BookRepo.getNewID
 import com.saucefan.stuff.readinglist.viewmodel.BookRepo.randBook
+import com.saucefan.stuff.readinglist.viewmodel.BookRepo.titleChangedBool
 import com.saucefan.stuff.readinglist.viewmodel.LocalFiles
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.bookview.view.*
+import timber.log.Timber.e
 
 import timber.log.Timber.i
 
 
 class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionListener {
+    private var entryList = mutableListOf<Book>()
+
+    override fun onDelete(book: Book) {
+        if (entryList.contains(book)) {
+            entryList.remove(book)
+        }
+        localFiles?.deleteEntry(book) ?: e("error on deleteEntry($book)")
+        refreshCrappyRecycleView ()
+    }
 
     fun refreshCrappyRecycleView () {
         ll.removeAllViews()
@@ -26,13 +37,25 @@ class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionList
         }
     }
 
-    private var entryList = mutableListOf<Book>()
     override fun onFragSave(book: Book) {
         //SharedPrefsDao(this).createEntry(book)
         var found=false
         for (view in ll.children) {
             if (view.tag == book.id) {
                 found=true
+                //before we do anything else, we need to check if this is a file that has had it's title changed
+                if (titleChangedBool){
+                    //since this is true, call delete on the old book we piece together from the contents of the view
+                    localFiles?.deleteEntry(Book(view.title.text.toString(),
+                            view.reasonToRead.text.toString(),
+                            false,
+                            0))
+                    //now that i've made it this way, i think it might be smarter just to keep a reference to the book
+                    //currently being edited and then call update on that -- shucks
+                    //TODO: MAKE UPDATE ACTUALLY DO SOMETHING
+
+                }
+
                 view.title.text = book.title
                 view.reasonToRead.text = book.reasonToRead
                 view.tv_id_list.text = book.id.toString()
@@ -45,21 +68,22 @@ class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionList
                     //intent stuff
                     openFragForBook(book, view) }
             }
+            localFiles?.createEntry(book) ?: i("shoot localfiles is borked on save")
         }
         if (!found) {
             ll.addView(buildIemView(book))
-
+            localFiles?.createEntry(book) ?: i("shoot localfiles is borked on save")
             entryList.add(book)
             val manager = supportFragmentManager
-            var list:DialogFragment = manager.findFragmentByTag("Edit Fragment") as DialogFragment
+            val list:DialogFragment = manager.findFragmentByTag("Edit Fragment") as DialogFragment
             list.dismiss()
         }else {
             //wonder if this will work
             val manager = supportFragmentManager
-            var list:DialogFragment = manager.findFragmentByTag("Edit Fragment") as DialogFragment
+            val list:DialogFragment = manager.findFragmentByTag("Edit Fragment") as DialogFragment
             list.dismiss()
         }
-        localFiles?.createEntry(book) ?: i("shoot localfiles is borked on save")
+
         refreshCrappyRecycleView ()
     }
 

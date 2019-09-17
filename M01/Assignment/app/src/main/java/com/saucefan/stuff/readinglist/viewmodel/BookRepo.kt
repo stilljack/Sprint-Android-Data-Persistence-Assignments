@@ -5,6 +5,11 @@ import kotlin.random.Random
 
 object BookRepo {
 
+    //we'll set these two so we can track where to clean up books that have had their titles changed
+    var titleChanged = ""
+    var titleChangedBool = false
+
+
     //GOD HELP US IF WE LOSE TRACK
     //we will update idcount on save
     //this is not great
