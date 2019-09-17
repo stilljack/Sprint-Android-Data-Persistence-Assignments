@@ -19,7 +19,7 @@ class Prefs (context:Context) {
             val id = getListOfIds()
 
         val ids=getListOfIds()
-        if (entry.id == JournalEntry.INVALID_ID && !ids.contains(entry.id.toString())){
+        if (entry.id == JournalEntry.INVALID_ID && !id.contains(entry.id.toString())){
             val editor=sharedPrefs.edit()
             var nextID =  sharedPrefs.getInt(NEXT_ID_KEY, 0)
             entry.id = nextID

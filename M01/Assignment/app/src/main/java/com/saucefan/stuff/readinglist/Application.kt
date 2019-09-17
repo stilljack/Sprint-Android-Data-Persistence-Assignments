@@ -1,8 +1,11 @@
 package com.saucefan.stuff.readinglist
 
 import android.app.Application
+import com.saucefan.stuff.readinglist.viewmodel.SharedPrefsDao
 import timber.log.Timber
-
+val prefs: SharedPrefsDao by lazy {
+    App.prefs!!
+}
 // TODO: 3. Extend Timber to include class, method, line numbers!
 class MyDebugTree : Timber.DebugTree() {
     override fun createStackElementTag(element: StackTraceElement): String? {
@@ -16,12 +19,14 @@ class MyDebugTree : Timber.DebugTree() {
 }
 
 class App : Application() {
-
+    companion object {
+        var prefs: SharedPrefsDao? = null
+    }
 
     override fun onCreate() {
         super.onCreate()
-        // TODO: 2. Configure Timber logging
-        // "Timber" Library
+        prefs = SharedPrefsDao(applicationContext)
+
         if (BuildConfig.DEBUG) {
             Timber.plant(MyDebugTree())
         }

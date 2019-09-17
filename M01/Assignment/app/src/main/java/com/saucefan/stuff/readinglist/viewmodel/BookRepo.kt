@@ -14,21 +14,7 @@ object BookRepo {
         var id = idCount
         idCount++
         return id.toString()
-
-
-
     }
-
-
-
-
-
-
-
-
-
-
-
 
 
     var fakeBooks = mutableListOf<Book>(

@@ -8,19 +8,24 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.children
 import com.saucefan.stuff.readinglist.R
 import com.saucefan.stuff.readinglist.model.Book
+import com.saucefan.stuff.readinglist.prefs
 import com.saucefan.stuff.readinglist.viewmodel.BookRepo.getNewID
 import com.saucefan.stuff.readinglist.viewmodel.BookRepo.idCount
 import com.saucefan.stuff.readinglist.viewmodel.BookRepo.randBook
+import com.saucefan.stuff.readinglist.viewmodel.SharedPrefsDao
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.bookview.view.*
 import kotlinx.android.synthetic.main.fragment_edit.view.*
+import timber.log.Timber
 
 
 class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionListener {
 
-
+    private var entryList = mutableListOf<Book>()
     override fun onFragSave(book: Book) {
-        var found = false
+        prefs.createEntry(book)
+        //this is all repeat code, lets finish this like the preferences app
+       /* var found = false
         for (view in ll.children) {
             if (view.tag == book.id) {
                 found=true
@@ -39,13 +44,44 @@ class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionList
         }
         if (!found) {
             ll.addView(buildIemView(book))
-        }
+        }*/
     }
 
 
+    override fun onStart() {
+        super.onStart()
+        Timber.i("onStart")
+    }
 
+    override fun onResume() {
+        super.onResume()
+
+        Timber.i("onResume")
+
+        ll.removeAllViews()
+        entryList.forEach { entry ->
+            ll.addView(buildIemView(entry))
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        Timber.i("onPause")
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        Timber.i("onStop")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        Timber.i("onDestroy")
+    }
     fun buildIemView(book: Book): View {
-        book.id = getNewID()
         var item = layoutInflater.inflate(R.layout.bookview, null, false)
         item.tv_id_list.text = book.id
         item.tag = book.id
@@ -98,11 +134,12 @@ class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionList
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        if (prefs.readAllEntries().isNullOrEmpty()){
+            prefs.createEntry(Book("edit title","enter a reason to read",false,"-1"))
+        }else entryList = prefs.readAllEntries()
         btn_whatever.setOnClickListener {
             ll.addView(buildIemView(randBook()))
         }
-
         btn_newitem.setOnClickListener {
             //making a new item is the same thing as editing an old item with default prompts, hence, to make a new item we're just going
             // to open up the same ol' edit fragment with a new book object
