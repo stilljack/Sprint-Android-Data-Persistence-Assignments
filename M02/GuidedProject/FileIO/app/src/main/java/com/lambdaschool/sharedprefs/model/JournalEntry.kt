@@ -1,6 +1,10 @@
 package com.lambdaschool.sharedprefs.model
 
 import android.net.Uri
+import org.json.JSONException
+import org.json.JSONObject
+import timber.log.Timber
+import timber.log.Timber.i
 import java.io.Serializable
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -28,6 +32,54 @@ class JournalEntry : Serializable {
         initializeDate()
     }
 
+    fun toJsonObject():JSONObject? {
+        try {
+            return JSONObject().apply {
+                put("date", date)
+                put("entry_text", entryText)
+                put("image", image)
+                put("day_rating", dayRating)
+                put("id",id)
+            }
+        }catch (e:JSONException) {
+            return try {
+                JSONObject("{\"data\": \"$date\", \"entry_text\": \"$entryText\", \"image\": \"$image\", \"day_rating\": \"$dayRating\", \"id\": \"$id\"}")
+            }catch (e2:JSONException) {
+                i("tojson is super effect")
+                return null
+
+            }
+        }
+
+
+    }
+
+    constructor(jsonObject: JSONObject) {
+        try {
+            this.dayRating = jsonObject.getInt("day_rating")
+        }catch (e:JSONException) {
+            this.dayRating = 0
+        }
+        try {
+            this.date = jsonObject.getString("date")
+        }catch (e:JSONException) {
+            this.date = (Date().time/1000).toString()
+        }
+        try {
+            this.id = jsonObject.getInt("id")
+        }catch (e:JSONException) {
+            this.id = -1
+        }
+        try {
+            this.image = jsonObject.getString("image")
+        }catch (e:JSONException) {
+            this.image = "null as heck daqwgaf"
+        }
+
+            this.entryText = jsonObject.getString("entry_text")
+
+
+    }
     constructor(csvString: String) {
         val values = csvString.split(",")
         // check to see if we have the right string
