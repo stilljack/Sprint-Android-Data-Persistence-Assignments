@@ -22,7 +22,7 @@ class JournalFileRepo (var context: Context):JournalRepoInterface {
         }
     override fun readAllEntries(): MutableList<JournalEntry> {
         //fileList
-        val entries = MutableList<JournalEntry>(filelist.size,0)
+        val entries = mutableListOf<JournalEntry>()
         // arraylist
         //read in files
        //convert to objects
@@ -65,7 +65,7 @@ return readString.toString()
 
     }
     override fun updateEntry(entry: JournalEntry) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        createEntry(entry)
     }
 
     override fun deleteEntry(entry: JournalEntry) {

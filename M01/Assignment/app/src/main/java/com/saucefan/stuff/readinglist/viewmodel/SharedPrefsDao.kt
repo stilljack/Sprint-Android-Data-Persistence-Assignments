@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.saucefan.stuff.readinglist.model.Book
 
-class SharedPrefsDao (context:Context){
+class SharedPrefsDao (context:Context) : StorageInterface{
 
     companion object {
 
@@ -15,12 +15,13 @@ class SharedPrefsDao (context:Context){
         const val READING_PREFS="SAUCE"
     }
 
-    infix fun createEntry(book: Book) {
+
+      fun createEntry(book: Book) {
         val ids = getListOfIds()
-        val any = if (book.id == INVALID_ID && !ids.contains(book.id.toString())) {
+        if (book.id == INVALID_ID && !ids.contains(book.id.toString())) {
             val editor = sharedPrefs.edit()
 
-            var nextID = sharedPrefs.getInt(NEXT_ID, 0)
+            var nextID = sharedPrefs.getString(NEXT_ID, "0")
             book.id = nextID?.toInt() ?: 0
             editor.putInt(NEXT_ID, ++book.id)
 
