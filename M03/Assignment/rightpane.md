@@ -44,6 +44,22 @@ SELECT * FROM PLAYERS
 //I was able to use SELECT * FROM PLAYERS JOIN TEAMS ON PLAYERS.team = TEAMS.id
 I got back...
 
+    SELECT * FROM PLAYERS JOIN TEAMS ON PLAYERS.team = TEAMS.id;
+
+| id  | first_name | last_name      | age   | team | team_name     | location   | founded |
+| --- | ---------- | -------------- | ----- | ---- | ------------- | ---------- | ------- |
+| 1   | jack       | seymour        | 6     | 1    | the losers    | usa        | 1985    |
+| 3   | jOHN       | stamos         | 4     | 3    | the nerds     | not mexico | 1980    |
+| 4   | OTHER      | GUYONFULLHOUSE | 12    | 4    | the also-rans | canada     | 1972    |
+| 2   | 1337       | HAX0R          | 30000 | 2    | THE DORKS     | cambodia   | 1999    |
+
+---
+
+
+
+
+
+//(and here's the leftpange.txt in md)
 **Schema (SQLite v3.26)**
 
       
@@ -83,18 +99,3 @@ I got back...
     
 
 ---
-
-**Query #1**
-
-    SELECT * FROM PLAYERS JOIN TEAMS ON PLAYERS.team = TEAMS.id;
-
-| id  | first_name | last_name      | age   | team | team_name     | location   | founded |
-| --- | ---------- | -------------- | ----- | ---- | ------------- | ---------- | ------- |
-| 1   | jack       | seymour        | 6     | 1    | the losers    | usa        | 1985    |
-| 3   | jOHN       | stamos         | 4     | 3    | the nerds     | not mexico | 1980    |
-| 4   | OTHER      | GUYONFULLHOUSE | 12    | 4    | the also-rans | canada     | 1972    |
-| 2   | 1337       | HAX0R          | 30000 | 2    | THE DORKS     | cambodia   | 1999    |
-
----
-
-[View on DB Fiddle](https://www.db-fiddle.com/#)
