@@ -12,6 +12,7 @@ import com.saucefan.stuff.readinglist.viewmodel.BookRepo.getNewID
 import com.saucefan.stuff.readinglist.viewmodel.BookRepo.randBook
 import com.saucefan.stuff.readinglist.viewmodel.BookRepo.titleChangedBool
 import com.saucefan.stuff.readinglist.viewmodel.LocalFiles
+import com.saucefan.stuff.readinglist.viewmodel.SharedPrefsDao
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.bookview.view.*
 import timber.log.Timber.e
@@ -46,10 +47,10 @@ class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionList
                 //before we do anything else, we need to check if this is a file that has had it's title changed
                 if (titleChangedBool){
                     //since this is true, call delete on the old book we piece together from the contents of the view
-                    localFiles?.deleteEntry(Book(view.title.text.toString(),
+                         /*localFiles?.deleteEntry(Book(view.title.text.toString(),
                             view.reasonToRead.text.toString(),
                             false,
-                            0))
+                            0))*/
                     //now that i've made it this way, i think it might be smarter just to keep a reference to the book
                     //currently being edited and then call update on that -- shucks
                     //TODO: MAKE UPDATE ACTUALLY DO SOMETHING
@@ -68,12 +69,14 @@ class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionList
                     //intent stuff
                     openFragForBook(book, view) }
             }
-            localFiles?.createEntry(book) ?: i("shoot localfiles is borked on save")
+           // localFiles?.createEntry(book) ?: i("shoot localfiles is borked on save")
         }
         if (!found) {
             ll.addView(buildIemView(book))
-            localFiles?.createEntry(book) ?: i("shoot localfiles is borked on save")
-            entryList.add(book)
+            val pref = SharedPrefsDao(this)
+            pref.createEntry(book)
+          //  localFiles?.createEntry(book) ?: i("shoot localfiles is borked on save")
+         //   entryList.add(book)
             val manager = supportFragmentManager
             val list:DialogFragment = manager.findFragmentByTag("Edit Fragment") as DialogFragment
             list.dismiss()
@@ -138,7 +141,7 @@ class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionList
         }
         item.setOnClickListener {
             //intent stuff
-            openFragForBook(book, item)
+           openFragForBook(book, item)
         }
         item.checkBox.setOnClickListener {
             if (book.hasBeenRead == true) {
@@ -175,9 +178,11 @@ class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionList
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         btn_whatever.setOnClickListener {
-            val book=randBook()
-            ll.addView(buildIemView(book))
-            entryList.add(book)
+
+
+           // val book=randBook()
+         //   ll.addView(buildIemView(book))
+          //  entryList.add(book)
         }
         btn_newitem.setOnClickListener {
             //making a new item is the same thing as editing an old item with default prompts, hence, to make a new item we're just going
@@ -185,12 +190,16 @@ class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionList
             //9/17/2029 that turns out not to be entirely true, i think we want to get a new id for this now
             openFragForBook(Book("Enter title","Enter Reason to Read",false,getNewID()),btn_newitem)
         }
-
-        localFiles= LocalFiles(this)
-        entryList = localFiles?.readAllEntries() as MutableList<Book>
+        val pref =SharedPrefsDao(this)
+        entryList = pref.readAllEntries()
         entryList.forEach { entry ->
             ll.addView(buildIemView(entry))
         }
+   /*    localFiles= LocalFiles(this)
+        entryList = localFiles?.readAllEntries() as MutableList<Book>
+        entryList.forEach { entry ->
+            ll.addView(buildIemView(entry))}*/
+
 
                 //prefs.readAllEntries() ?:  mutableListOf<Book>(); i("we yelling timber")
 

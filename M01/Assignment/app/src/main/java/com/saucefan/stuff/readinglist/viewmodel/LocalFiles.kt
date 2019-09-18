@@ -49,6 +49,7 @@ class LocalFiles(var context: Context) :StorageInterface {
             }
             return fileNames
         }
+
     private fun readFromFile (filename:String):String{
         val inputFile = File(storageDirectory,filename)
         var readString:String? = null

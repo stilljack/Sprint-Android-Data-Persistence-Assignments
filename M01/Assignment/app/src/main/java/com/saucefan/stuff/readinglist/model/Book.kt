@@ -15,6 +15,7 @@ class Book: Serializable
     var hasBeenRead: Boolean? = null
     var id: Int = 0
 
+    //i don't think this would ever even come up thanks to gson but we'll leave it for now i suppose
     constructor(jsonObject: JSONObject) {
         try{
         this.title =jsonObject.getString("title")
