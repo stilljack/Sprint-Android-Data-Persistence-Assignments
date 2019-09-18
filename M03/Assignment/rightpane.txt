@@ -23,3 +23,18 @@ SELECT team_name FROM TEAMS WHERE id>=2
 //the nerds
 //the also-rans
 // i.e anything with id value that is equal to or greater than 2
+
+DELETE FROM TEAMS WHERE id<=2;
+SELECT * FROM TEAMS
+
+//returns rows with id 3 and 4 and rows with id less than or equal to 2 have been deleted
+
+UPDATE PLAYERS SET first_name="new value"  WHERE id=2 or id=3;
+SELECT * FROM PLAYERS
+
+//returns table players such that players with id=2 or id=3 now have their first names changed to "new value"
+
+UPDATE PLAYERS SET first_name="Jack"  WHERE first_name="jack";
+SELECT * FROM PLAYERS
+
+//blah blah blah, looks through the db finds the objects that match the query first_name="jack" and replaces them with "Jack"
