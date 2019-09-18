@@ -24,7 +24,6 @@ class SharedPrefsDao (context:Context) : StorageInterface{
     }
     override fun createEntry(book: Book) {
 
-
         val ids = getListOfIds()
         if (book.id == INVALID_ID && !ids.contains(book.id.toString())) {
             val editor = sharedPrefs.edit()
@@ -33,13 +32,13 @@ class SharedPrefsDao (context:Context) : StorageInterface{
             editor.putInt(NEXT_ID, ++nextID)
 
             ids.add(book.id.toString())
-            val newIdList = StringBuilder()
+            var newIdList = StringBuilder()
             for (id in ids) {
                 newIdList.append(id).append(",")
             }
-            editor.putString(NEXT_ID, newIdList.toString())
+            editor.putString(ID_LIST_KEY, newIdList.toString())
             editor.putString(ENTRY_ID_PREFIX + book.id, book.toCsvString())
-            editor.apply()
+            editor.commit()
         } else {
             updateEntry(book)
         }
@@ -77,7 +76,7 @@ class SharedPrefsDao (context:Context) : StorageInterface{
     override fun updateEntry(book:Book){
             val editor = sharedPrefs.edit()
             editor.putString(ENTRY_ID_PREFIX + book.id, book.toCsvString())
-        editor.apply()
+        editor.commit()
         }
     override fun deleteEntry(book: Book) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
