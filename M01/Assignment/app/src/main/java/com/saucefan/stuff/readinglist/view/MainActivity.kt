@@ -11,6 +11,7 @@ import androidx.fragment.app.DialogFragment
 import com.saucefan.stuff.readinglist.App.Companion.localFiles
 import com.saucefan.stuff.readinglist.R
 import com.saucefan.stuff.readinglist.model.Book
+import com.saucefan.stuff.readinglist.viewmodel.BookRepo.entryList
 import com.saucefan.stuff.readinglist.viewmodel.BookRepo.getNewID
 import com.saucefan.stuff.readinglist.viewmodel.BookRepo.randBook
 import com.saucefan.stuff.readinglist.viewmodel.BookRepo.titleChangedBool
@@ -24,7 +25,7 @@ import timber.log.Timber.i
 
 
 class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionListener {
-    private var entryList = mutableListOf<Book>()
+
 
     override fun onDelete(book: Book) {
         if (entryList.contains(book)) {
@@ -71,14 +72,14 @@ class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionList
                     //intent stuff
                     openFragForBook(book, view) }
             }
-    //        localFiles?.createEntry(book) ?: i("shoot localfiles is borked on save")
+            localFiles?.createEntry(book) ?: i("shoot localfiles is borked on save")
         }
         if (!found) {
             ll.addView(buildIemView(book))
-            val pref = SharedPrefsDao(this)
-            pref.createEntry(book)
-   //         localFiles?.createEntry(book) ?: i("shoot localfiles is borked on save")
-  //          entryList.add(book)
+         //   val pref = SharedPrefsDao(this)
+            //pref.createEntry(book)
+           localFiles?.createEntry(book) ?: i("shoot localfiles is borked on save")
+          entryList.add(book)
             val manager = supportFragmentManager
             val list:DialogFragment = manager.findFragmentByTag("Edit Fragment") as DialogFragment
             list.dismiss()
@@ -178,7 +179,7 @@ class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionList
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         btn_whatever.setOnClickListener {
-         //   randbox()
+           randbox()
         }
         btn_newitem.setOnClickListener {
             //making a new item is the same thing as editing an old item with default prompts, hence, to make a new item we're just going
@@ -186,16 +187,15 @@ class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionList
             //9/17/2029 that turns out not to be entirely true, i think we want to get a new id for this now
             openFragForBook(Book("Enter title","Enter Reason to Read",false,getNewID()),btn_newitem)
         }
-       val pref =SharedPrefsDao(this)
-      entryList = pref.readAllEntries()
-       entryList.forEach { entry ->
-         ll.addView(buildIemView(entry))
-        }
-   /* localFiles= LocalFiles(this)
+ //      val pref =SharedPrefsDao(this)
+  //    entryList = pref.readAllEntries()
+    //   entryList.forEach { entry ->
+ //        ll.addView(buildIemView(entry))
+  //      }
+    localFiles= LocalFiles(this)
         entryList = localFiles?.readAllEntries() as MutableList<Book>
         entryList.forEach { entry ->
             ll.addView(buildIemView(entry))}
-*/
 
                 //prefs.readAllEntries() ?:  mutableListOf<Book>(); i("we yelling timber")
 

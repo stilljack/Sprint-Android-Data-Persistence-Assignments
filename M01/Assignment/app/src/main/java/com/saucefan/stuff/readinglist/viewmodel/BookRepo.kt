@@ -4,7 +4,7 @@ import com.saucefan.stuff.readinglist.model.Book
 import kotlin.random.Random
 
 object BookRepo {
-
+    var entryList = mutableListOf<Book>()
     //we'll set these two so we can track where to clean up books that have had their titles changed
     var titleChanged = ""
     var titleChangedBool = false

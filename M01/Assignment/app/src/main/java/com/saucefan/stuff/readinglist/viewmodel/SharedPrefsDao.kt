@@ -46,7 +46,8 @@ class SharedPrefsDao (context:Context) : StorageInterface{
             ids.add(book.id.toString())
             var newIdList = StringBuilder()
             for (id in ids) {
-                if(id!="") {
+                if(id!="" && id.toInt() >= 0) {
+                    // i wonder if that even protects me from anything... whatever it lives here now
                     newIdList.append(id).append(",")
                 }
             }
