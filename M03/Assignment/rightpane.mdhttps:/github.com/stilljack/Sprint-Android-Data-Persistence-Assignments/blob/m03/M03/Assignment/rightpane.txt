@@ -98,3 +98,7 @@ I got back...
 ---
 
 [View on DB Fiddle](https://www.db-fiddle.com/#)
+
+//which is exactly what I want to happen! 
+
+//interesting thing to note.... players JOIN team takes the ID of TEAMS over PLAYERS... something to remember going forward
