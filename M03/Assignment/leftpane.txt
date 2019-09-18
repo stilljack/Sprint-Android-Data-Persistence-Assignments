@@ -1,8 +1,11 @@
+  
 CREATE TABLE PLAYERS (
  id INTEGER PRIMARY KEY,
  first_name TEXT,
  last_name TEXT,
- age INTEGER
+ age INTEGER,
+ team integer,
+ FOREIGN KEY(team) REFERENCES TEAMS(id)
 );
 
 CREATE TABLE TEAMS (
@@ -12,14 +15,14 @@ CREATE TABLE TEAMS (
  founded INTEGER
 );
 
-INSERT INTO PLAYERS (id, first_name,last_name,age)
-VALUES (1,"jack","seymour",6);
-INSERT INTO PLAYERS (id, first_name,last_name,age)
-VALUES (2,"jOHN","stamos",4);
-INSERT INTO PLAYERS (id, first_name,last_name,age)
-VALUES (3,"OTHER","GUYONFULLHOUSE",12);
-INSERT INTO PLAYERS (id, first_name,last_name,age)
-VALUES (42,"1337","HAX0R",30000);
+INSERT INTO PLAYERS (id, first_name,last_name,age,team)
+VALUES (1,"jack","seymour",6,1);
+INSERT INTO PLAYERS (id, first_name,last_name,age,team)
+VALUES (2,"jOHN","stamos",4,3);
+INSERT INTO PLAYERS (id, first_name,last_name,age,team)
+VALUES (3,"OTHER","GUYONFULLHOUSE",12,4);
+INSERT INTO PLAYERS (id, first_name,last_name,age,team)
+VALUES (42,"1337","HAX0R",30000,2);
 
 INSERT INTO TEAMS (id, team_name,location,founded)
 VALUES (1,"the losers","usa",1985);
