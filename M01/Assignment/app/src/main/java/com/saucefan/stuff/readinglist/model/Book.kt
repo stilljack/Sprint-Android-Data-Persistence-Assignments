@@ -56,7 +56,7 @@ class Book: Serializable
             // unescape them
                 this.reasonToRead = values[1].replace("~@",",")
                 this.hasBeenRead = values[2].toBoolean()
-                this.id = values[4].toInt()
+                this.id = values[3].toInt()
         }
         else {
             Timber.e("csv2obj error $this ${this.title} / ${this.reasonToRead} / ${this.hasBeenRead} / ${this.id}")

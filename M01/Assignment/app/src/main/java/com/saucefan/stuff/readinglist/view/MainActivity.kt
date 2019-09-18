@@ -71,19 +71,18 @@ class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionList
                     //intent stuff
                     openFragForBook(book, view) }
             }
-            localFiles?.createEntry(book) ?: i("shoot localfiles is borked on save")
+    //        localFiles?.createEntry(book) ?: i("shoot localfiles is borked on save")
         }
         if (!found) {
             ll.addView(buildIemView(book))
-          //  val pref = SharedPrefsDao(this)
-         //   pref.createEntry(book)
-            localFiles?.createEntry(book) ?: i("shoot localfiles is borked on save")
-            entryList.add(book)
+            val pref = SharedPrefsDao(this)
+            pref.createEntry(book)
+   //         localFiles?.createEntry(book) ?: i("shoot localfiles is borked on save")
+  //          entryList.add(book)
             val manager = supportFragmentManager
             val list:DialogFragment = manager.findFragmentByTag("Edit Fragment") as DialogFragment
             list.dismiss()
         }else {
-            //wonder if this will work
             val manager = supportFragmentManager
             val list:DialogFragment = manager.findFragmentByTag("Edit Fragment") as DialogFragment
             list.dismiss()
@@ -179,20 +178,7 @@ class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionList
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         btn_whatever.setOnClickListener {
-           // val sharedPrefs: SharedPreferences = this.getSharedPreferences(SharedPrefsDao.READING_PREFS, Context.MODE_PRIVATE)
-         //   val editor = sharedPrefs.edit()
-         //  val test =sharedPrefs.getString("test", "default")
-         //   if (test =="default"){
-         //       editor.putString("test","not default")
-          //      editor.commit()
-          //      Toast.makeText(this,"it didn't worked $test", Toast.LENGTH_SHORT).show()
-          //  } else Toast.makeText(this,"it worked $test", Toast.LENGTH_SHORT).show()
-
-
-
-            val book=randBook()
-            ll.addView(buildIemView(book))
-            entryList.add(book)
+         //   randbox()
         }
         btn_newitem.setOnClickListener {
             //making a new item is the same thing as editing an old item with default prompts, hence, to make a new item we're just going
@@ -200,18 +186,24 @@ class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionList
             //9/17/2029 that turns out not to be entirely true, i think we want to get a new id for this now
             openFragForBook(Book("Enter title","Enter Reason to Read",false,getNewID()),btn_newitem)
         }
-     //   val pref =SharedPrefsDao(this)
-     //   entryList = pref.readAllEntries()
-     //   entryList.forEach { entry ->
-   //         ll.addView(buildIemView(entry))
-       // }
-    localFiles= LocalFiles(this)
+       val pref =SharedPrefsDao(this)
+      entryList = pref.readAllEntries()
+       entryList.forEach { entry ->
+         ll.addView(buildIemView(entry))
+        }
+   /* localFiles= LocalFiles(this)
         entryList = localFiles?.readAllEntries() as MutableList<Book>
         entryList.forEach { entry ->
             ll.addView(buildIemView(entry))}
-
+*/
 
                 //prefs.readAllEntries() ?:  mutableListOf<Book>(); i("we yelling timber")
 
+    }
+
+    private fun randbox() {
+        val book = randBook()
+        ll.addView(buildIemView(book))
+        entryList.add(book)
     }
 }
