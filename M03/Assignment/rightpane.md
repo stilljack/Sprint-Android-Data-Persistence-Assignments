@@ -1,16 +1,16 @@
-// instructions are not super clear, as usual for older assignments... 
-// so gonna as I work through the instructions going to put the code I used, brief descriptions of results and reflections
-
-SELECT * FROM TEAMS
-// predictably returns all the rows contained in the table TEAMS
-
-SELECT name FROM TEAMS
-
-//woops
-
-SELECT team_name FROM TEAMS
-
-//there we go, returns just the names of all entries of the TEAMS table
+#instructions are not super clear, as usual for older assignments... 
+# so gonna as I work through the instructions going to put the code I used, brief descriptions of results and reflections
+#
+#SELECT * FROM TEAMS
+# predictably returns all the rows contained in the table TEAMS
+#
+#SELECT name FROM TEAMS
+#
+#woops
+#
+#SELECT team_name FROM TEAMS
+#
+#there we go, returns just the names of all entries of the TEAMS table
 
 SELECT team_name FROM TEAMS WHERE id=2
 
