@@ -40,7 +40,7 @@ SELECT * FROM PLAYERS
 //blah blah blah, looks through the db finds the objects that match the query first_name="jack" and replaces them with "Jack"
 
 //foriegn key stretch
-// so having altered leftpane -- the insert -- to include setting PLAYERS.team to TEAMS.id as a foriegn_key,
+// so having altered leftpane -- the schema? sure the schema-- to include setting PLAYERS.team to TEAMS.id as a foriegn_key,
 //I was able to use SELECT * FROM PLAYERS JOIN TEAMS ON PLAYERS.team = TEAMS.id
 I got back...
 
