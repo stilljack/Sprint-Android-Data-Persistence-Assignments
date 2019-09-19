@@ -20,15 +20,12 @@ class Prefs(context: Context): JournalRepoInterface {
         private const val ID_LIST_KEY = "id_list"
         private const val ENTRY_ITEM_KEY_PREFIX = "entry_"
         private const val NEXT_ID_KEY = "next_id"
-
         private const val BACKGROUND_COLOR = "background_color"  // and example
     }
 
     val sharedPrefs: SharedPreferences =
         context.getSharedPreferences(JOURNAL_PREFERENCES, Context.MODE_PRIVATE)
 
-    // TODO: 17. Each Journal Entry will be its own entry in shared preferences
-    // create a new entry
     override fun createEntry(entry: JournalEntry) {
         // read list of entry ids
         val ids = getListOfIds()
@@ -61,7 +58,7 @@ class Prefs(context: Context): JournalRepoInterface {
         }
     }
 
-    // TODO: 18. IDs are all stored as a CSV list in one SharedPreferences entry
+
     private fun getListOfIds(): java.util.ArrayList<String> {
         val idList = sharedPrefs.getString(ID_LIST_KEY, "")
         val oldList = idList!!.split(",")

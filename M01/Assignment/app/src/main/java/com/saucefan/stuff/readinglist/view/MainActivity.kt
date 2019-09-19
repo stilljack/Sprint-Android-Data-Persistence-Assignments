@@ -1,20 +1,39 @@
 package com.saucefan.stuff.readinglist.view
 
+import android.content.Context
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.saucefan.stuff.readinglist.App.Companion.prefs
+import androidx.core.view.children
+import androidx.fragment.app.DialogFragment
+import com.saucefan.stuff.readinglist.App.Companion.localFiles
 import com.saucefan.stuff.readinglist.R
 import com.saucefan.stuff.readinglist.model.Book
+import com.saucefan.stuff.readinglist.viewmodel.BookRepo.entryList
+import com.saucefan.stuff.readinglist.viewmodel.BookRepo.getNewID
 import com.saucefan.stuff.readinglist.viewmodel.BookRepo.randBook
+import com.saucefan.stuff.readinglist.viewmodel.BookRepo.titleChangedBool
+import com.saucefan.stuff.readinglist.viewmodel.LocalFiles
 import com.saucefan.stuff.readinglist.viewmodel.SharedPrefsDao
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.bookview.view.*
-import timber.log.Timber
+import timber.log.Timber.e
+
 import timber.log.Timber.i
 
 
 class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionListener {
+
+
+    override fun onDelete(book: Book) {
+        if (entryList.contains(book)) {
+            entryList.remove(book)
+        }
+        localFiles?.deleteEntry(book) ?: e("error on deleteEntry($book)")
+        refreshCrappyRecycleView ()
+    }
 
     fun refreshCrappyRecycleView () {
         ll.removeAllViews()
@@ -23,18 +42,27 @@ class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionList
         }
     }
 
-    private var entryList = mutableListOf<Book>()
     override fun onFragSave(book: Book) {
-        SharedPrefsDao(this).createEntry(book)
-        refreshCrappyRecycleView()
-        //this is all repeat code, lets finish this like the preferences app
-       /* var found = false
+        //SharedPrefsDao(this).createEntry(book)
+        var found=false
         for (view in ll.children) {
             if (view.tag == book.id) {
                 found=true
+                //before we do anything else, we need to check if this is a file that has had it's title changed
+                if (titleChangedBool){
+                    //since this is true, call delete on the old book we piece together from the contents of the view
+                         localFiles?.deleteEntry(Book(view.title.text.toString(),
+                            view.reasonToRead.text.toString(),
+                            false,
+                            0))
+                    //now that i've made it this way, i think it might be smarter just to keep a reference to the book
+                    //currently being edited and then call update on that -- shucks
+                    //TODO: MAKE UPDATE ACTUALLY DO SOMETHING
+
+                }
                 view.title.text = book.title
                 view.reasonToRead.text = book.reasonToRead
-                view.tv_id_list.text = book.id
+                view.tv_id_list.text = book.id.toString()
                 if (book.hasBeenRead == true) {
                     view.background = getDrawable(R.color.bgHightlight)
                     view.checkBox.setChecked(true)
@@ -44,22 +72,35 @@ class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionList
                     //intent stuff
                     openFragForBook(book, view) }
             }
+            localFiles?.createEntry(book) ?: i("shoot localfiles is borked on save")
         }
         if (!found) {
             ll.addView(buildIemView(book))
-        }*/
+         //   val pref = SharedPrefsDao(this)
+            //pref.createEntry(book)
+           localFiles?.createEntry(book) ?: i("shoot localfiles is borked on save")
+          entryList.add(book)
+            val manager = supportFragmentManager
+            val list:DialogFragment = manager.findFragmentByTag("Edit Fragment") as DialogFragment
+            list.dismiss()
+        }else {
+            val manager = supportFragmentManager
+            val list:DialogFragment = manager.findFragmentByTag("Edit Fragment") as DialogFragment
+            list.dismiss()
+        }
+        refreshCrappyRecycleView()
     }
 
 
     override fun onStart() {
         super.onStart()
-        Timber.i("onStart")
+        i("onStart")
     }
 
     override fun onResume() {
         super.onResume()
 
-        Timber.i("onResume")
+        i("onResume")
 
         ll.removeAllViews()
         entryList.forEach { entry ->
@@ -70,22 +111,22 @@ class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionList
     override fun onPause() {
         super.onPause()
 
-        Timber.i("onPause")
+       i("onPause")
     }
 
     override fun onStop() {
         super.onStop()
 
-        Timber.i("onStop")
+       i("onStop")
     }
 
     override fun onDestroy() {
         super.onDestroy()
 
-        Timber.i("onDestroy")
+        i("onDestroy")
     }
     fun buildIemView(book: Book): View {
-        var item = layoutInflater.inflate(R.layout.bookview, null, false)
+        val item = layoutInflater.inflate(R.layout.bookview, null, false)
         item.tv_id_list.text = book.id.toString()
         item.tag = book.id
         item.title.text = "${book.title}"
@@ -101,7 +142,7 @@ class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionList
         }
         item.setOnClickListener {
             //intent stuff
-            openFragForBook(book, item)
+           openFragForBook(book, item)
         }
         item.checkBox.setOnClickListener {
             if (book.hasBeenRead == true) {
@@ -130,25 +171,39 @@ class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionList
         val bundle = Bundle()
         bundle.putSerializable(EDIT_BOOK, book)
         frag.arguments = bundle
-        transaction.add(frag, "Edit Fragment ${item.tag}")
+        transaction.add(frag, "Edit Fragment")
         transaction.commit()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val prefs = SharedPrefsDao(this)
         btn_whatever.setOnClickListener {
-            ll.addView(buildIemView(randBook()))
+           randbox()
         }
         btn_newitem.setOnClickListener {
             //making a new item is the same thing as editing an old item with default prompts, hence, to make a new item we're just going
-            // to open up the same ol' edit fragment with a new book object
-            openFragForBook(Book("Enter title","Enter Reason to Read",false,-1),btn_newitem)
+            // to open up the same ol' edit fragment with a new book object --
+            //9/17/2029 that turns out not to be entirely true, i think we want to get a new id for this now
+            openFragForBook(Book("Enter title","Enter Reason to Read",false,getNewID()),btn_newitem)
         }
-       /* if (prefs.readAllEntries().isNullOrEmpty()){
-            prefs.createEntry(Book("edit title","enter a reason to read",false,-1))
-        }else */entryList = prefs.readAllEntries() ?:  mutableListOf<Book>(); i("we yelling timber")
+ //      val pref =SharedPrefsDao(this)
+  //    entryList = pref.readAllEntries()
+    //   entryList.forEach { entry ->
+ //        ll.addView(buildIemView(entry))
+  //      }
+    localFiles= LocalFiles(this)
+        entryList = localFiles?.readAllEntries() as MutableList<Book>
+        entryList.forEach { entry ->
+            ll.addView(buildIemView(entry))}
 
+                //prefs.readAllEntries() ?:  mutableListOf<Book>(); i("we yelling timber")
+
+    }
+
+    private fun randbox() {
+        val book = randBook()
+        ll.addView(buildIemView(book))
+        entryList.add(book)
     }
 }

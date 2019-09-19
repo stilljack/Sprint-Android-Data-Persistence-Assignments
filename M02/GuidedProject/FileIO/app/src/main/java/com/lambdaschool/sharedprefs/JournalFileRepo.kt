@@ -3,9 +3,12 @@ package com.lambdaschool.sharedprefs
 import android.content.Context
 import android.os.Environment
 import com.lambdaschool.sharedprefs.model.JournalEntry
+import org.json.JSONException
+import org.json.JSONObject
 import java.io.*
 
 class JournalFileRepo (var context: Context):JournalRepoInterface {
+
     val filelist:ArrayList<String>
         get(){
             val fileNames = arrayListOf<String>()
@@ -22,16 +25,23 @@ class JournalFileRepo (var context: Context):JournalRepoInterface {
         }
     override fun readAllEntries(): MutableList<JournalEntry> {
         //fileList
-        val entries = MutableList<JournalEntry>(filelist.size,0)
+        val entries = mutableListOf<JournalEntry>()
         // arraylist
         //read in files
        //convert to objects
 
         for(filename in filelist) {
             val json = readFromFile(filename)
+            try {
+                entries.add(JournalEntry(JSONObject(json)))
+            } catch (e: JSONException) {
+                e.printStackTrace()
+            }
+        }
+        return entries
         }
 
-    }
+
 
 
     private fun readFromFile (filename:String):String{
@@ -65,7 +75,7 @@ return readString.toString()
 
     }
     override fun updateEntry(entry: JournalEntry) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        createEntry(entry)
     }
 
     override fun deleteEntry(entry: JournalEntry) {

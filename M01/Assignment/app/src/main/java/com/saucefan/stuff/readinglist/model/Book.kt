@@ -1,5 +1,8 @@
 package com.saucefan.stuff.readinglist.model
 
+import com.saucefan.stuff.readinglist.viewmodel.BookRepo.getNewID
+import org.json.JSONException
+import org.json.JSONObject
 import timber.log.Timber
 import java.io.Serializable
 
@@ -11,6 +14,26 @@ class Book: Serializable
     var reasonToRead: String? = null
     var hasBeenRead: Boolean? = null
     var id: Int = 0
+
+    //i don't think this would ever even come up thanks to gson but we'll leave it for now i suppose
+    constructor(jsonObject: JSONObject) {
+        try{
+        this.title =jsonObject.getString("title")
+        }catch (e:JSONException) {
+            this.title="badjson"
+        }
+        try {
+            this.reasonToRead = jsonObject.getString("reasonToRead")
+        }catch (e:JSONException) {
+            this.reasonToRead="badjson"
+        }
+        try{
+        this.hasBeenRead=jsonObject.getBoolean("hasBeenRead")
+    }catch (e:JSONException) {
+    this.hasBeenRead=false
+}
+        this.id=getNewID()
+    }
 
     constructor(
         title:String,
@@ -33,7 +56,7 @@ class Book: Serializable
             // unescape them
                 this.reasonToRead = values[1].replace("~@",",")
                 this.hasBeenRead = values[2].toBoolean()
-                this.id = values[4].toInt()
+                this.id = values[3].toInt()
         }
         else {
             Timber.e("csv2obj error $this ${this.title} / ${this.reasonToRead} / ${this.hasBeenRead} / ${this.id}")

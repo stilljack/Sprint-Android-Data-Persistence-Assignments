@@ -11,6 +11,9 @@ import androidx.fragment.app.DialogFragment
 
 import com.saucefan.stuff.readinglist.R
 import com.saucefan.stuff.readinglist.model.Book
+import com.saucefan.stuff.readinglist.viewmodel.BookRepo.getNewID
+import com.saucefan.stuff.readinglist.viewmodel.BookRepo.titleChanged
+import com.saucefan.stuff.readinglist.viewmodel.BookRepo.titleChangedBool
 import kotlinx.android.synthetic.main.fragment_edit.*
 import timber.log.Timber
 import timber.log.Timber.i
@@ -35,20 +38,21 @@ class EditFragment : DialogFragment() {
     private var listener: OnFragmentInteractionListener? = null
 
 
-    fun returnData():Book {
+    fun returnData(book:Book):Book {
 
-        var newBook:Book=Book("blank title","blank reason",false,-1)
         if (!et_title.text.isNullOrBlank()){
-            newBook.title=et_title.text.toString()
+            //if this is the case, we'll need to delete the old file, so...
+            titleChangedBool=true
+            book.title=et_title.text.toString()
+
         } else Timber.e("title blank")
         if (!et_rtr.text.isNullOrBlank()){
-            newBook.reasonToRead=et_rtr.text.toString()
+            book.reasonToRead=et_rtr.text.toString()
         }else Timber.e("rtr blank")
         if(chkbox.isChecked){
-            newBook.hasBeenRead=true
-        }
-        newBook.id=tv_id.text.toString().toInt()
-        return newBook
+            book.hasBeenRead=true
+        } else book.hasBeenRead=false
+        return book
 
     }
 
@@ -59,6 +63,7 @@ class EditFragment : DialogFragment() {
             title = it.getString(ARG_NAME)
             book = it.getSerializable(EDIT_BOOK) as Book
         }
+
     }
 
     override fun onCreateView(
@@ -85,14 +90,14 @@ class EditFragment : DialogFragment() {
                 chkbox.invalidate()
             }
             chkbox.setOnClickListener {
-                if(chkbox.isChecked) {
-                    chkbox.background=resources.getDrawable(R.color.bgRegular)
+                if(book?.hasBeenRead as Boolean) {
+                 //   chkbox.background=resources.getDrawable(R.color.bgRegular)
                     fragcl.background=resources.getDrawable(R.color.bgRegular)
                     //chkbox.isChecked=false
                    // chkbox.invalidate()
                     book?.hasBeenRead=false //?: i("failure at chkbox")
                 }else {
-                    chkbox.background = resources.getDrawable(R.color.bgHightlight)
+                //    chkbox.background = resources.getDrawable(R.color.bgHightlight)
                     fragcl.background = resources.getDrawable(R.color.bgHightlight)
                    // chkbox.isChecked=true
                     //chkbox.invalidate()
@@ -101,9 +106,12 @@ class EditFragment : DialogFragment() {
             }
         } ?: Toast.makeText(view.context,"book ain't good like",Toast.LENGTH_SHORT).show(); Timber.e("$book book is empty or bad")
    btn_submit.setOnClickListener(){
-       listener?.onFragSave(returnData()) ?:Timber.e("THE LISTENER AIN'T A WORKING")
-
+       listener?.onFragSave(returnData(book as Book)) ?:Timber.e("THE LISTENER AIN'T A WORKING")
    }
+        btn_delete.setOnClickListener{
+            listener?.onDelete(book as Book)
+            dismiss()
+        }
 
     }
 
@@ -128,6 +136,7 @@ class EditFragment : DialogFragment() {
 
     interface OnFragmentInteractionListener {
         fun onFragSave(book: Book)
+        fun onDelete(book:Book)
     }
 
     companion object {
