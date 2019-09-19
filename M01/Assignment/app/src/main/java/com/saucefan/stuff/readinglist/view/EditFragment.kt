@@ -90,14 +90,14 @@ class EditFragment : DialogFragment() {
                 chkbox.invalidate()
             }
             chkbox.setOnClickListener {
-                if(chkbox.isChecked == true) {
-                    chkbox.background=resources.getDrawable(R.color.bgRegular)
+                if(book?.hasBeenRead as Boolean) {
+                 //   chkbox.background=resources.getDrawable(R.color.bgRegular)
                     fragcl.background=resources.getDrawable(R.color.bgRegular)
                     //chkbox.isChecked=false
                    // chkbox.invalidate()
                     book?.hasBeenRead=false //?: i("failure at chkbox")
                 }else {
-                    chkbox.background = resources.getDrawable(R.color.bgHightlight)
+                //    chkbox.background = resources.getDrawable(R.color.bgHightlight)
                     fragcl.background = resources.getDrawable(R.color.bgHightlight)
                    // chkbox.isChecked=true
                     //chkbox.invalidate()
