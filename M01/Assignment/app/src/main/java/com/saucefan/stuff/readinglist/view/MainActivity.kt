@@ -87,6 +87,8 @@ class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionList
                             view.reasonToRead.text.toString(),
                             false,
                             0))
+                    titleChangedBool=false
+
                     //now that i've made it this way, i think it might be smarter just to keep a reference to the book
                     //currently being edited and then call update on that -- shucks
                     //TODO: MAKE UPDATE ACTUALLY DO SOMETHING
