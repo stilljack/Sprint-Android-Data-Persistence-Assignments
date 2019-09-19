@@ -2,7 +2,7 @@ package com.saucefan.stuff.readinglist.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import com.saucefan.stuff.readinglist.App.Companion.repo
+import com.saucefan.stuff.readinglist.repo
 import com.saucefan.stuff.readinglist.model.Book
 
 class BookViewModel : ViewModel() {
@@ -13,19 +13,19 @@ class BookViewModel : ViewModel() {
 
 
     fun readAllEntries() : LiveData<List<Book>> {
-        return repo!!.readAllEntries()
+        return repo.readAllEntries()
     }
 
     fun createEntry(entry: Book) {
-        repo!!.createEntry(entry)
+        repo.createEntry(entry)
     }
 
     fun updateEntry(entry: Book) {
-        repo!!.updateEntry(entry)
+        repo.updateEntry(entry)
     }
 
     fun deleteEntry(entry:Book) {
-        repo!!.deleteEntry(entry)
+        repo.deleteEntry(entry)
     }
 
 

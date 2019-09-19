@@ -8,8 +8,10 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.saucefan.stuff.readinglist.App
 import com.saucefan.stuff.readinglist.R
 import com.saucefan.stuff.readinglist.model.Book
+import com.saucefan.stuff.readinglist.room.BookDBRepo
 import com.saucefan.stuff.readinglist.viewmodel.BookRepo.entryList
 import com.saucefan.stuff.readinglist.viewmodel.BookRepo.getNewID
 import com.saucefan.stuff.readinglist.viewmodel.BookRepo.randBook
@@ -135,14 +137,12 @@ class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionList
             //making a new item is the same thing as editing an old item with default prompts, hence, to make a new item we're just going
             // to open up the same ol' edit fragment with a new book object --
             //9/17/2029 that turns out not to be entirely true, i think we want to get a new id for this now
-            openFragForBook(Book("Enter title","Enter Reason to Read",false,getNewID()),btn_newitem)
+            openFragForBook(Book("Enter title","Enter Reason to Read",false,0),btn_newitem)
         }
         viewModel = ViewModelProviders.of(this).get(BookViewModel::class.java)
+
+        i("onCreate")
         ReadAllAsyncTask(this).execute()
-        entryList.forEach { entry ->
-            ll.addView(buildIemView(entry))}
-
-
     }
 
     class CreateAsyncTask(viewModel: BookViewModel) : AsyncTask<Book, Void, Unit>() {
@@ -190,7 +190,6 @@ class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionList
         override fun onPostExecute(result: LiveData<List<Book>>?) {
             activity.get()?.let { act ->
                 result?.let { entries ->
-                    // TODO 27: Observe LiveData here
                     entries.observe(act,
                             Observer<List<Book>> { t ->
                                 t?.let {

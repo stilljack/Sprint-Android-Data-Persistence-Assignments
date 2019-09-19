@@ -11,12 +11,14 @@ interface BookDBDAO {
     //
     @Insert(onConflict =  OnConflictStrategy.ABORT)
     fun createEntry(book: Book)
-    @Query("SELECT * FROM Book")
+    @Query("SELECT * FROM book")
     fun readAllEntries(): LiveData<List<Book>>
     @Update(onConflict = OnConflictStrategy.REPLACE)
     fun updateEntry(book: Book)
     @Delete
     fun deleteEntry(book: Book)
+
+
 
     /*
         @Insert(onConflict = OnConflictStrategy.ABORT)

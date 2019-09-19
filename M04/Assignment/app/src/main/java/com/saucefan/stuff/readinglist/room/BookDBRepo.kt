@@ -10,24 +10,24 @@ import com.saucefan.stuff.readinglist.viewmodel.StorageInterface
 
 class BookDBRepo (val context: Context) : StorageInterface {
     override fun createEntry(book: Book) {
-        database.BookDBDAO().createEntry(book)
+        database.bookDBDAO().createEntry(book)
     }
 
     override fun updateEntry(book: Book) {
-        database.BookDBDAO().createEntry(book)
+        database.bookDBDAO().createEntry(book)
     }
 
     override fun deleteEntry(book: Book) {
-        database.BookDBDAO().deleteEntry(book)
+        database.bookDBDAO().deleteEntry(book)
     }
 
 
     override fun readAllEntries(): LiveData<List<Book>> {
-        return database.BookDBDAO().readAllEntries()
+        return database.bookDBDAO().readAllEntries()
     }
 
     // TODO 15: Build the Room database
-    private val database/**/ by lazy {
+    private val database by lazy {
         Room.databaseBuilder(
                 context.applicationContext,
                 BookDatabase::class.java, "book_database"

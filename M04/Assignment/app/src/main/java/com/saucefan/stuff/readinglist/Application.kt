@@ -28,9 +28,9 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        repo = BookDBRepo(applicationContext)
-      //  prefs = SharedPrefsDao(applicationContext)
 
+      //  prefs = SharedPrefsDao(applicationContext)
+        repo = BookDBRepo(applicationContext)
         if (BuildConfig.DEBUG) {
             Timber.plant(MyDebugTree())
         }
