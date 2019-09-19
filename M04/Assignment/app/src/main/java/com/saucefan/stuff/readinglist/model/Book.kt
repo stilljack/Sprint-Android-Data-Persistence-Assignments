@@ -1,5 +1,8 @@
 package com.saucefan.stuff.readinglist.model
 
+import androidx.annotation.NonNull
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.Gson
 import com.google.gson.JsonElement
 import com.saucefan.stuff.readinglist.viewmodel.BookRepo.getNewID
@@ -7,14 +10,14 @@ import org.json.JSONException
 import org.json.JSONObject
 import timber.log.Timber
 import java.io.Serializable
-
-class Book: Serializable
+@Entity
+class Book : Serializable
 
 {
-
     var title: String? = null
     var reasonToRead: String? = null
     var hasBeenRead: Boolean? = null
+    @PrimaryKey(autoGenerate = true) @NonNull
     var id: Int = 0
 
     //i don't think this would ever even come up thanks to gson but we'll leave it for now i suppose
