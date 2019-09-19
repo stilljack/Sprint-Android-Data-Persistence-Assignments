@@ -95,28 +95,17 @@ class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionList
                     //TODO: MAKE UPDATE ACTUALLY DO SOMETHING
 
                 }
-                view.title.text = book.title
-                view.reasonToRead.text = book.reasonToRead
-                view.tv_id_list.text = book.id.toString()
-                if (book.hasBeenRead == true) {
-                    view.background = getDrawable(R.color.bgHightlight)
-                    view.checkBox.setChecked(true)
-                    view.checkBox.invalidate()
-                } else view.background = getDrawable(R.color.bgRegular)
-                view.setOnClickListener {
-                    //intent stuff
-                    openFragForBook(book, view) }
+
             }
-            localFiles?.createEntry(book) ?: i("shoot localfiles is borked on save")
         }
         if (!found) {
             ll.addView(buildIemView(book))
          //   val pref = SharedPrefsDao(this)
             //pref.createEntry(book)
-           localFiles?.createEntry(book) ?: i("shoot localfiles is borked on save")
+
           entryList.add(book)
         }
-
+        localFiles?.createEntry(book) ?: i("shoot localfiles is borked on save")
         val manager = supportFragmentManager
         val list:DialogFragment = manager.findFragmentByTag("Edit Fragment") as DialogFragment
         list.dismiss()
