@@ -77,6 +77,7 @@ class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionList
     override fun onFragSave(book: Book) {
         //SharedPrefsDao(this).createEntry(book)
         var found=false
+
         for (view in ll.children) {
             if (view.tag == book.id) {
                 found=true
@@ -114,14 +115,11 @@ class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionList
             //pref.createEntry(book)
            localFiles?.createEntry(book) ?: i("shoot localfiles is borked on save")
           entryList.add(book)
-            val manager = supportFragmentManager
-            val list:DialogFragment = manager.findFragmentByTag("Edit Fragment") as DialogFragment
-            list.dismiss()
-        }else {
-            val manager = supportFragmentManager
-            val list:DialogFragment = manager.findFragmentByTag("Edit Fragment") as DialogFragment
-            list.dismiss()
         }
+
+        val manager = supportFragmentManager
+        val list:DialogFragment = manager.findFragmentByTag("Edit Fragment") as DialogFragment
+        list.dismiss()
         refreshCrappyRecycleView()
     }
 
@@ -212,6 +210,8 @@ class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionList
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+
         btn_whatever.setOnClickListener {
            randbox()
         }

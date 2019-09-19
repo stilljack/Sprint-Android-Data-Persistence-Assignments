@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:tools="http://schemas.android.com/tools">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/fragcl"
     android:layout_width="400dp"
     android:layout_height="300dp"
@@ -10,13 +11,19 @@
     tools:context=".view.EditFragment"
     android:background="@color/bgRegular"
     android:padding="8dp">
+    <data>
 
+        <variable
+            name="Book"
+            type="com.saucefan.stuff.readinglist.model.Book"
+            />
+    </data>
     <!-- TODO: Update blank fragment layout -->
     <EditText
         android:id="@+id/et_title"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:hint="title"
+      android:hint="@{Book.title}"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:elevation="0dp"
@@ -27,7 +34,7 @@
         android:layout_width="300dp"
         android:minHeight="120dp"
         android:layout_height="wrap_content"
-        android:hint="reason to read\n\n\n\n"
+        android:hint="@{Book.reasonToRead}"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@id/et_title"
         android:elevation="0dp"
@@ -38,6 +45,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="read?"
+        android:checked="@{Book.hasBeenRead}"
         app:layout_constraintRight_toRightOf="@id/et_rtr"
         app:layout_constraintTop_toTopOf="parent"
         android:elevation="2dp"
@@ -77,4 +85,4 @@
     />
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout></layout>
