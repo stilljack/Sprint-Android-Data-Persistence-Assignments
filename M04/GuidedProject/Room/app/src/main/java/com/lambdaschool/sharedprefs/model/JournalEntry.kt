@@ -1,5 +1,6 @@
 package com.lambdaschool.sharedprefs.model
 
+import android.database.Cursor
 import android.net.Uri
 import androidx.annotation.NonNull
 import androidx.room.Entity
@@ -12,21 +13,21 @@ import java.util.Date
 import java.util.Locale
 
 // TODO 6: Annotate the Entity
-
+@Entity
 class JournalEntry : Serializable {
 
     companion object {
         const val TAG = "JournalEntry"
         // TODO 8: This must be 0 if we want autoGenerate to work
-        const val INVALID_ID = -1
+        const val INVALID_ID = 0
     }
-
     var date: String? = null
     var entryText: String? = null
     var image: String? = null
     var dayRating: Int = 0
 
     // TODO 7: Let's make id the primary key
+    @PrimaryKey(autoGenerate = true)
     var id: Int = 0
 
     constructor(id: Int) {
@@ -140,6 +141,7 @@ class JournalEntry : Serializable {
 
     fun setImage(imageUri: Uri) {
         this.image = imageUri.toString()
+
     }
 
     override fun toString(): String {

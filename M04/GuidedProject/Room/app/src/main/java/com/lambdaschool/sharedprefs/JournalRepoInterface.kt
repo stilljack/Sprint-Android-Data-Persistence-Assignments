@@ -8,7 +8,7 @@ import com.lambdaschool.sharedprefs.model.JournalEntry
 interface JournalRepoInterface {
     fun createEntry(entry: JournalEntry)
     // TODO 28: LiveData in the interface
-    fun readAllEntries(): MutableList<JournalEntry>
+    fun readAllEntries(): LiveData<List<JournalEntry>>
     fun updateEntry(entry: JournalEntry)
     fun deleteEntry(entry: JournalEntry)
 }

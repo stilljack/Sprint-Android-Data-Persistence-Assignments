@@ -76,7 +76,7 @@ class Prefs(context: Context): JournalRepoInterface {
     }
 
     // read all entries
-    override fun readAllEntries(): LiveData<List<JournalEntry>> {
+    override fun readAllEntries(): LiveData<List<JournalEntry>>{
         // read list of entry ids
         val listOfIds = getListOfIds()
 
@@ -93,6 +93,7 @@ class Prefs(context: Context): JournalRepoInterface {
         val liveData = MutableLiveData<List<JournalEntry>>()
         liveData.postValue(entryList)
         return liveData
+
     }
 
 
