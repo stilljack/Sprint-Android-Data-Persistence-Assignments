@@ -90,7 +90,7 @@ class EditFragment : DialogFragment() {
                 chkbox.invalidate()
             }
             chkbox.setOnClickListener {
-                if(chkbox.isChecked) {
+                if(chkbox.isChecked == true) {
                     chkbox.background=resources.getDrawable(R.color.bgRegular)
                     fragcl.background=resources.getDrawable(R.color.bgRegular)
                     //chkbox.isChecked=false

@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.MainActivity">
+    tools:context=".view.MainActivity"
+    android:background="@color/bgRegular">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -24,13 +25,15 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:text="whatever button"
-        android:id="@+id/btn_whatever"/>
+        android:id="@+id/btn_whatever"
+        android:background="@color/bgRegbtn"/>
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@id/btn_whatever"
         app:layout_constraintStart_toStartOf="parent"
         android:text="new item"
-        android:id="@+id/btn_newitem"/>
+        android:id="@+id/btn_newitem"
+        android:background="@color/bgRegbtn"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
