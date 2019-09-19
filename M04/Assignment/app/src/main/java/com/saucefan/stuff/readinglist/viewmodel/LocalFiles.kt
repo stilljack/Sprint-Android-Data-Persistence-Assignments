@@ -11,7 +11,7 @@ import java.io.*
 
 
 
-class LocalFiles(var context: Context) :StorageInterface {
+class LocalFiles(var context: Context)  {/*
     //check permissions
     val gson= Gson()
     val isExternalStorageWriteable:Boolean
@@ -136,5 +136,5 @@ class LocalFiles(var context: Context) :StorageInterface {
         }
 
 
-    }
+    }*/
 }

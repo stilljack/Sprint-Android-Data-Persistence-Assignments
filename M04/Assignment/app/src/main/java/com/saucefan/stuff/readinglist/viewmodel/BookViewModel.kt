@@ -24,6 +24,9 @@ class BookViewModel : ViewModel() {
         repo!!.updateEntry(entry)
     }
 
+    fun deleteEntry(entry:Book) {
+        repo!!.deleteEntry(entry)
+    }
 
 
 }

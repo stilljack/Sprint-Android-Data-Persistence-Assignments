@@ -2,8 +2,6 @@ package com.saucefan.stuff.readinglist
 
 import android.app.Application
 import com.saucefan.stuff.readinglist.room.BookDBRepo
-import com.saucefan.stuff.readinglist.viewmodel.LocalFiles
-import com.saucefan.stuff.readinglist.viewmodel.SharedPrefsDao
 import com.saucefan.stuff.readinglist.viewmodel.StorageInterface
 import timber.log.Timber
 

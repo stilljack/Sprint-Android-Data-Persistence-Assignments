@@ -1,5 +1,6 @@
 package com.saucefan.stuff.readinglist.room
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.saucefan.stuff.readinglist.model.Book
 
@@ -11,7 +12,7 @@ interface BookDBDAO {
     @Insert(onConflict =  OnConflictStrategy.ABORT)
     fun createEntry(book: Book)
     @Query("SELECT * FROM Book")
-    fun readAllEntries(): MutableList<Book>
+    fun readAllEntries(): LiveData<List<Book>>
     @Update(onConflict = OnConflictStrategy.REPLACE)
     fun updateEntry(book: Book)
     @Delete

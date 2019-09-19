@@ -1,32 +1,22 @@
 package com.saucefan.stuff.readinglist.view
 
-import android.content.Context
-import android.content.SharedPreferences
 import android.os.AsyncTask
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.children
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.saucefan.stuff.readinglist.App.Companion.localFiles
 import com.saucefan.stuff.readinglist.R
 import com.saucefan.stuff.readinglist.model.Book
-import com.saucefan.stuff.readinglist.viewmodel.BookRepo.deleteEntryFromRepo
 import com.saucefan.stuff.readinglist.viewmodel.BookRepo.entryList
 import com.saucefan.stuff.readinglist.viewmodel.BookRepo.getNewID
 import com.saucefan.stuff.readinglist.viewmodel.BookRepo.randBook
-import com.saucefan.stuff.readinglist.viewmodel.BookRepo.titleChangedBool
 import com.saucefan.stuff.readinglist.viewmodel.BookViewModel
-import com.saucefan.stuff.readinglist.viewmodel.LocalFiles
-import com.saucefan.stuff.readinglist.viewmodel.SharedPrefsDao
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.bookview.view.*
 import timber.log.Timber.e
-
 import timber.log.Timber.i
 import java.lang.ref.WeakReference
 
@@ -71,12 +61,8 @@ class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionList
     lateinit var viewModel: BookViewModel
 
     override fun onDelete(book: Book) {
-        //delete the file from the app's repo
-        //and delete it from localfiles
-        //obviously observing the book is a better model than this
-        deleteEntryFromRepo(book)
-        deleteEntry(book) ?: e("error on deleteEntry($book)")
-        refreshCrappyRecycleView ()
+        //deleteEntryFromRepo(book)
+        DeleteAsyncTask(viewModel).execute(book) ?: e("error on deleteEntry($book)")
     }
 
     fun refreshCrappyRecycleView (entryList:List<Book>) {
@@ -87,14 +73,10 @@ class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionList
     }
 
     override fun onFragSave(book: Book) {
-
-
-
-        localFiles?.createEntry(book) ?: i("shoot localfiles is borked on save")
+        CreateAsyncTask(viewModel).execute(book) ?: i("shoot localfiles is borked on save")
         val manager = supportFragmentManager
         val list:DialogFragment = manager.findFragmentByTag("Edit Fragment") as DialogFragment
         list.dismiss()
-        refreshCrappyRecycleView()
     }
 
     fun buildIemView(book: Book): View {
@@ -186,7 +168,17 @@ class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionList
         }
     }
 
-    // TODO 21: Create AsyncTasks
+    class DeleteAsyncTask(viewModel: BookViewModel) : AsyncTask<Book, Void, Unit>() {
+        private val viewModel = WeakReference(viewModel)
+        override fun doInBackground(vararg entries: Book?) {
+            if (entries.isNotEmpty()) {
+                entries[0]?.let {
+                    viewModel.get()?.deleteEntry(it)
+                }
+            }
+        }
+    }
+
     class ReadAllAsyncTask(activity: MainActivity) : AsyncTask<Void, Void, LiveData<List<Book>>?>() {
 
         private val activity = WeakReference(activity)

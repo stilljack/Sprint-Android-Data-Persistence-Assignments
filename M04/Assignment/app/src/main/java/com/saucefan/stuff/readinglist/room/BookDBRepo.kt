@@ -22,7 +22,7 @@ class BookDBRepo (val context: Context) : StorageInterface {
     }
 
 
-    override fun readAllEntries(): MutableList<Book>{
+    override fun readAllEntries(): LiveData<List<Book>> {
         return database.BookDBDAO().readAllEntries()
     }
 
