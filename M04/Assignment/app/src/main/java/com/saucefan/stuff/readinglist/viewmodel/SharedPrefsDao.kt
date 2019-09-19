@@ -2,10 +2,12 @@ package com.saucefan.stuff.readinglist.viewmodel
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.lifecycle.LiveData
 import com.saucefan.stuff.readinglist.model.Book
 import com.saucefan.stuff.readinglist.viewmodel.BookRepo.getNewID
 import com.saucefan.stuff.readinglist.viewmodel.BookRepo.idCount
 import org.json.JSONException
+/*
 
 class SharedPrefsDao (context:Context) : StorageInterface{
 
@@ -63,9 +65,9 @@ class SharedPrefsDao (context:Context) : StorageInterface{
 
         // read an existing entry
 
-      override  fun readAllEntries(): MutableList<Book> {
+      override  fun readAllEntries(): LiveData<List<Book>> {
             val listOfId = getListOfIds()
-            val entryList = mutableListOf<Book>()
+            val entryList = LiveData<List<Book>>
             for (id in listOfId) {
                 if (id.isNotBlank()) {
                     readEntry(id.toInt())?.let {
@@ -87,3 +89,4 @@ class SharedPrefsDao (context:Context) : StorageInterface{
     }
     }
 
+*/

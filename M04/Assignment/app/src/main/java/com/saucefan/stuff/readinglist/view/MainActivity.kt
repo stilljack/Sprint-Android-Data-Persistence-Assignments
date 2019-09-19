@@ -2,12 +2,16 @@ package com.saucefan.stuff.readinglist.view
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.os.AsyncTask
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.children
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.saucefan.stuff.readinglist.App.Companion.localFiles
 import com.saucefan.stuff.readinglist.R
 import com.saucefan.stuff.readinglist.model.Book
@@ -16,6 +20,7 @@ import com.saucefan.stuff.readinglist.viewmodel.BookRepo.entryList
 import com.saucefan.stuff.readinglist.viewmodel.BookRepo.getNewID
 import com.saucefan.stuff.readinglist.viewmodel.BookRepo.randBook
 import com.saucefan.stuff.readinglist.viewmodel.BookRepo.titleChangedBool
+import com.saucefan.stuff.readinglist.viewmodel.BookViewModel
 import com.saucefan.stuff.readinglist.viewmodel.LocalFiles
 import com.saucefan.stuff.readinglist.viewmodel.SharedPrefsDao
 import kotlinx.android.synthetic.main.activity_main.*
@@ -23,8 +28,15 @@ import kotlinx.android.synthetic.main.bookview.view.*
 import timber.log.Timber.e
 
 import timber.log.Timber.i
+import java.lang.ref.WeakReference
 
-
+/*
+* 9/19/2016 --- room migration
+*
+* losing a ton of useless code out of here.
+*
+*
+* */
 /*
 *this app is bad and i can do better next time
 *       if you have objects, you should be deleting THE OBJECT not an instance of the object living in
@@ -56,18 +68,18 @@ import timber.log.Timber.i
 
 
 class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionListener {
-
+    lateinit var viewModel: BookViewModel
 
     override fun onDelete(book: Book) {
         //delete the file from the app's repo
         //and delete it from localfiles
         //obviously observing the book is a better model than this
         deleteEntryFromRepo(book)
-        localFiles?.deleteEntry(book) ?: e("error on deleteEntry($book)")
+        deleteEntry(book) ?: e("error on deleteEntry($book)")
         refreshCrappyRecycleView ()
     }
 
-    fun refreshCrappyRecycleView () {
+    fun refreshCrappyRecycleView (entryList:List<Book>) {
         ll.removeAllViews()
         entryList.forEach { entry ->
             ll.addView(buildIemView(entry))
@@ -75,36 +87,9 @@ class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionList
     }
 
     override fun onFragSave(book: Book) {
-        //SharedPrefsDao(this).createEntry(book)
-        var found=false
 
-        for (view in ll.children) {
-            if (view.tag == book.id) {
-                found=true
-                //before we do anything else, we need to check if this is a file that has had it's title changed
-                if (titleChangedBool){
-                    //since this is true, call delete on the old book we piece together from the contents of the view
-                         localFiles?.deleteEntry(Book(view.title.text.toString(),
-                            view.reasonToRead.text.toString(),
-                            false,
-                            0))
-                    titleChangedBool=false
 
-                    //now that i've made it this way, i think it might be smarter just to keep a reference to the book
-                    //currently being edited and then call update on that -- shucks
-                    //TODO: MAKE UPDATE ACTUALLY DO SOMETHING
 
-                }
-
-            }
-        }
-        if (!found) {
-            ll.addView(buildIemView(book))
-         //   val pref = SharedPrefsDao(this)
-            //pref.createEntry(book)
-
-          entryList.add(book)
-        }
         localFiles?.createEntry(book) ?: i("shoot localfiles is borked on save")
         val manager = supportFragmentManager
         val list:DialogFragment = manager.findFragmentByTag("Edit Fragment") as DialogFragment
@@ -112,40 +97,6 @@ class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionList
         refreshCrappyRecycleView()
     }
 
-
-    override fun onStart() {
-        super.onStart()
-        i("onStart")
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        i("onResume")
-
-        ll.removeAllViews()
-        entryList.forEach { entry ->
-            ll.addView(buildIemView(entry))
-        }
-    }
-
-    override fun onPause() {
-        super.onPause()
-
-       i("onPause")
-    }
-
-    override fun onStop() {
-        super.onStop()
-
-       i("onStop")
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-
-        i("onDestroy")
-    }
     fun buildIemView(book: Book): View {
         val item = layoutInflater.inflate(R.layout.bookview, null, false)
         item.tv_id_list.text = book.id.toString()
@@ -162,20 +113,14 @@ class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionList
             item.checkBox.invalidate()
         }
         item.setOnClickListener {
-            //intent stuff
            openFragForBook(book, item)
         }
         item.checkBox.setOnClickListener {
             if (book.hasBeenRead == true) {
                 item.background = getDrawable(R.color.bgRegular)
-             //   item.checkBox.setChecked(true)
-            //    item.checkBox.invalidate()
                 book.hasBeenRead=false
             } else {
-
                 item.background = getDrawable(R.color.bgHightlight)
-              //  item.checkBox.setChecked(false)
-             //   item.checkBox.invalidate()
                 book.hasBeenRead=true
             }
         }
@@ -210,23 +155,96 @@ class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionList
             //9/17/2029 that turns out not to be entirely true, i think we want to get a new id for this now
             openFragForBook(Book("Enter title","Enter Reason to Read",false,getNewID()),btn_newitem)
         }
- //      val pref =SharedPrefsDao(this)
-  //    entryList = pref.readAllEntries()
-    //   entryList.forEach { entry ->
- //        ll.addView(buildIemView(entry))
-  //      }
-    localFiles= LocalFiles(this)
-        entryList = localFiles?.readAllEntries() as MutableList<Book>
+        viewModel = ViewModelProviders.of(this).get(BookViewModel::class.java)
+        ReadAllAsyncTask(this).execute()
         entryList.forEach { entry ->
             ll.addView(buildIemView(entry))}
 
-                //prefs.readAllEntries() ?:  mutableListOf<Book>(); i("we yelling timber")
 
     }
+
+    class CreateAsyncTask(viewModel: BookViewModel) : AsyncTask<Book, Void, Unit>() {
+        private val viewModel = WeakReference(viewModel)
+        override fun doInBackground(vararg entries: Book?) {
+            if (entries.isNotEmpty()) {
+                entries[0]?.let {
+                    viewModel.get()?.createEntry(it)
+                }
+            }
+        }
+    }
+
+    // TODO 20: Create AsyncTasks
+    class UpdateAsyncTask(viewModel: BookViewModel) : AsyncTask<Book, Void, Unit>() {
+        private val viewModel = WeakReference(viewModel)
+        override fun doInBackground(vararg entries: Book?) {
+            if (entries.isNotEmpty()) {
+                entries[0]?.let {
+                    viewModel.get()?.updateEntry(it)
+                }
+            }
+        }
+    }
+
+    // TODO 21: Create AsyncTasks
+    class ReadAllAsyncTask(activity: MainActivity) : AsyncTask<Void, Void, LiveData<List<Book>>?>() {
+
+        private val activity = WeakReference(activity)
+
+        override fun doInBackground(vararg entries: Void?): LiveData<List<Book>>? {
+            return activity.get()?.viewModel?.entries
+        }
+
+        override fun onPostExecute(result: LiveData<List<Book>>?) {
+            activity.get()?.let { act ->
+                result?.let { entries ->
+                    // TODO 27: Observe LiveData here
+                    entries.observe(act,
+                            Observer<List<Book>> { t ->
+                                t?.let {
+                                    act.refreshCrappyRecycleView(t)
+                                }
+                            }
+                    )
+                }
+            }
+        }
+    }
+
+
 
     private fun randbox() {
         val book = randBook()
         ll.addView(buildIemView(book))
         entryList.add(book)
+    }
+
+
+
+
+    override fun onStart() {
+        super.onStart()
+        i("onStart")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        i("onResume")
+
+    }
+
+    override fun onPause() {
+        super.onPause()
+        i("onPause")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        i("onStop")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        i("onDestroy")
     }
 }
