@@ -11,6 +11,7 @@ import androidx.fragment.app.DialogFragment
 import com.saucefan.stuff.readinglist.App.Companion.localFiles
 import com.saucefan.stuff.readinglist.R
 import com.saucefan.stuff.readinglist.model.Book
+import com.saucefan.stuff.readinglist.viewmodel.BookRepo.deleteEntryFromRepo
 import com.saucefan.stuff.readinglist.viewmodel.BookRepo.entryList
 import com.saucefan.stuff.readinglist.viewmodel.BookRepo.getNewID
 import com.saucefan.stuff.readinglist.viewmodel.BookRepo.randBook
@@ -24,13 +25,41 @@ import timber.log.Timber.e
 import timber.log.Timber.i
 
 
+/*
+*this app is bad and i can do better next time
+*       if you have objects, you should be deleting THE OBJECT you not a instance of the object
+*           main activity. Obviously this app was hobbled by specifically code like what led to refreshcrappyrecycleview()
+*               and ll.childcount.
+*
+* so remember, it may take longer to think through what the object is where to store it...
+* but otherwise you end up with a house of cards waiting to be breathed on too hard
+*
+* so:
+* recycleview and possibly inherting from ViewModel
+* maybe custom classes that don't do a whole lot but express common behavior,
+* like the checkboxes all turn their background colors based on book.hasbeenread
+* with data binding, observers and live data we could be changing that instead of wrting an dumb
+* if statement everythime i place a chekcbox
+*
+* cynical take:
+* a poorly used week
+* bright side:
+* one step closer to being able to make apps that are readable, maintainable and parsimonious
+*
+*
+*
+*/
+
+
+
 class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionListener {
 
 
     override fun onDelete(book: Book) {
-        if (entryList.contains(book)) {
-            entryList.remove(book)
-        }
+        //delete the file from the app's repo
+        //and delete it from localfiles
+        //obviously observing the book is a better model than this
+        deleteEntryFromRepo(book)
         localFiles?.deleteEntry(book) ?: e("error on deleteEntry($book)")
         refreshCrappyRecycleView ()
     }

@@ -19,7 +19,11 @@ object BookRepo {
     fun getNewID():Int {
         return idCount++
     }
-
+  fun deleteEntryFromRepo(book:Book) {
+      if (entryList.contains(book)) {
+          entryList.remove(book)
+      }
+  }
 
     var fakeBooks = mutableListOf<Book>(
         Book("variables1","none",false,-1),
