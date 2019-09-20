@@ -10,8 +10,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.saucefan.stuff.readinglist.R
 import com.saucefan.stuff.readinglist.model.Book
-import com.saucefan.stuff.readinglist.viewmodel.BookRepo.entryList
-import com.saucefan.stuff.readinglist.viewmodel.BookRepo.randBook
 import com.saucefan.stuff.readinglist.viewmodel.BookViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.bookview.view.*
@@ -24,6 +22,17 @@ import java.lang.ref.WeakReference
 *
 * losing a ton of useless code out of here.
 *
+* room is freakin magic. I'm so blown away by this...
+*
+* so retrofit...
+*
+* well we're already in this app making arbitrary new objects with ID zero a
+* and room takes care of it
+* importantly seems we need to keep the internal primary key seperate from
+* any ids we pick up in apis or whatever
+* so that's fine, doing operations of the data once we got it can be done in sql
+* which is unfamiliar to me at this point but predictable
+* 
 *
 * */
 /*
@@ -133,7 +142,7 @@ class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionList
 
 
         btn_whatever.setOnClickListener {
-           randbox()
+           //
         }
         btn_newitem.setOnClickListener {
             //making a new item is the same thing as editing an old item with default prompts, hence, to make a new item we're just going
@@ -199,14 +208,6 @@ class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionList
                 }
             }
         }
-    }
-
-
-
-    private fun randbox() {
-        val book = randBook()
-        ll.addView(buildIemView(book))
-        entryList.add(book)
     }
 
 
