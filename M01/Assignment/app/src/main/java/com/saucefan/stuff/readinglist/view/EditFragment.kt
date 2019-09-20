@@ -7,9 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 
 import com.saucefan.stuff.readinglist.R
+import com.saucefan.stuff.readinglist.databinding.FragmentEditBinding
 import com.saucefan.stuff.readinglist.model.Book
 import com.saucefan.stuff.readinglist.viewmodel.BookRepo.getNewID
 import com.saucefan.stuff.readinglist.viewmodel.BookRepo.titleChanged
@@ -22,22 +24,13 @@ import timber.log.Timber.i
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 private const val ARG_NAME = "param1"
 const val EDIT_BOOK = "param2"
+private lateinit var binding: FragmentEditBinding
 
-/**
- * A simple [Fragment] subclass.
- * Activities that contain this fragment must implement the
- * [EditFragment.OnFragmentInteractionListener] interface
- * to handle interaction events.
- * Use the [EditFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class EditFragment : DialogFragment() {
-    // TODO: Rename and change types of parameters
-    private var title: String? = null
+
+
     private var book: Book? = null
     private var listener: OnFragmentInteractionListener? = null
-
-
     fun returnData(book:Book):Book {
 
         if (!et_title.text.isNullOrBlank()){
@@ -60,7 +53,6 @@ class EditFragment : DialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            title = it.getString(ARG_NAME)
             book = it.getSerializable(EDIT_BOOK) as Book
         }
 
@@ -71,7 +63,12 @@ class EditFragment : DialogFragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
+
+       // binding = DataBindingUtil.inflate(inflater,R.layout.fragment_edit,container,false)
+      //   val view = binding.root
         return inflater.inflate(R.layout.fragment_edit, container, false)
+
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

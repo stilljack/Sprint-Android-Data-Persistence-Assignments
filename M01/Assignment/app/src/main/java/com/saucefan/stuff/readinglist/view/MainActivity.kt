@@ -11,6 +11,7 @@ import androidx.fragment.app.DialogFragment
 import com.saucefan.stuff.readinglist.App.Companion.localFiles
 import com.saucefan.stuff.readinglist.R
 import com.saucefan.stuff.readinglist.model.Book
+import com.saucefan.stuff.readinglist.viewmodel.BookRepo.deleteEntryFromRepo
 import com.saucefan.stuff.readinglist.viewmodel.BookRepo.entryList
 import com.saucefan.stuff.readinglist.viewmodel.BookRepo.getNewID
 import com.saucefan.stuff.readinglist.viewmodel.BookRepo.randBook
@@ -24,13 +25,44 @@ import timber.log.Timber.e
 import timber.log.Timber.i
 
 
+/*
+*this app is bad and i can do better next time
+*       if you have objects, you should be deleting THE OBJECT not an instance of the object living in
+*           main activity. This app was hobbled by the instructions, which  led to stuff like refreshcrappyrecycleview()
+*               and using ll.childcount to know how many entries have been made.
+*
+* so in the future i hope to remember, it may take longer to think through what the object IS -- where to store it,
+* how it could change, how to deal with those changes and what the user should and shouldn't see when
+* OBSERVING
+* the object
+*  otherwise you end up with a house of cards waiting to be breathed on too hard
+*
+* so:
+* recycleview and possibly inherting from ViewModel
+* maybe custom classes (view) that don't do a whole lot but express common behavior,
+* like the checkboxes all turn their background colors based on book.hasbeenread
+* with data binding, observers and live data we could be changing that instead of wrting a dumb
+* if statement everythime i place a chekcbox
+*
+* cynical take:
+* a poorly used week
+* bright side:
+* one step closer to being able to make apps that are readable, maintainable and parsimonious
+*
+*android jetpack... android jetpack... must understand android jetpack.
+*
+*/
+
+
+
 class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionListener {
 
 
     override fun onDelete(book: Book) {
-        if (entryList.contains(book)) {
-            entryList.remove(book)
-        }
+        //delete the file from the app's repo
+        //and delete it from localfiles
+        //obviously observing the book is a better model than this
+        deleteEntryFromRepo(book)
         localFiles?.deleteEntry(book) ?: e("error on deleteEntry($book)")
         refreshCrappyRecycleView ()
     }
@@ -45,6 +77,7 @@ class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionList
     override fun onFragSave(book: Book) {
         //SharedPrefsDao(this).createEntry(book)
         var found=false
+
         for (view in ll.children) {
             if (view.tag == book.id) {
                 found=true
@@ -55,6 +88,8 @@ class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionList
                             view.reasonToRead.text.toString(),
                             false,
                             0))
+                    titleChangedBool=false
+
                     //now that i've made it this way, i think it might be smarter just to keep a reference to the book
                     //currently being edited and then call update on that -- shucks
                     //TODO: MAKE UPDATE ACTUALLY DO SOMETHING
@@ -80,14 +115,11 @@ class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionList
             //pref.createEntry(book)
            localFiles?.createEntry(book) ?: i("shoot localfiles is borked on save")
           entryList.add(book)
-            val manager = supportFragmentManager
-            val list:DialogFragment = manager.findFragmentByTag("Edit Fragment") as DialogFragment
-            list.dismiss()
-        }else {
-            val manager = supportFragmentManager
-            val list:DialogFragment = manager.findFragmentByTag("Edit Fragment") as DialogFragment
-            list.dismiss()
         }
+
+        val manager = supportFragmentManager
+        val list:DialogFragment = manager.findFragmentByTag("Edit Fragment") as DialogFragment
+        list.dismiss()
         refreshCrappyRecycleView()
     }
 
@@ -178,6 +210,8 @@ class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionList
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+
         btn_whatever.setOnClickListener {
            randbox()
         }

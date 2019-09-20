@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="20dp"
+    tools:context=".ui.DetailsActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/add_image_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/get_image"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/journal_entry_text" />
+
+        <EditText
+            android:id="@+id/journal_entry_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="top|start"
+            android:hint="@string/journal_entry"
+            android:importantForAutofill="no"
+            android:inputType="textMultiLine"
+            android:lines="12"
+            android:maxLines="12"
+            android:minLines="6"
+            android:scrollbars="vertical"
+            app:layout_constraintBottom_toTopOf="@id/add_image_button"
+            app:layout_constraintTop_toBottomOf="@id/journal_entry_seekbar"
+            tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed aliquam facilisis orci, at vulputate nisl. Donec vel lacus vehicula, lacinia tortor non, cursus nulla. Suspendisse tristique, ipsum nec hendrerit mollis, risus felis convallis neque, a blandit enim magna id metus. Aliquam scelerisque sit amet velit sed hendrerit. Proin fringilla eu massa at dignissim. Aliquam vitae viverra nunc. Nunc sit amet elit sed purus eleifend tempus vel fermentum sem. Etiam vel lorem ligula." />
+
+        <ImageView
+            android:id="@+id/journal_entry_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:contentDescription="@string/journal_entry"
+            android:src="@drawable/ic_launcher_background"
+            app:layout_constraintBottom_toTopOf="@id/journal_entry_date"
+            app:layout_constraintTop_toBottomOf="@+id/entry_id_label" />
+
+        <SeekBar
+            android:id="@+id/journal_entry_seekbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="15dp"
+            app:layout_constraintBottom_toTopOf="@id/journal_entry_text"
+            app:layout_constraintTop_toBottomOf="@id/journal_entry_date" />
+
+        <TextView
+            android:id="@+id/journal_entry_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="Hello World!"
+            android:textAlignment="center"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/journal_entry_seekbar"
+            app:layout_constraintTop_toBottomOf="@id/journal_entry_image" />
+
+
+        <TextView
+            android:id="@+id/entry_id_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="#23" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">L-S6M1</string>
+    <string name="prefs_file_key">prefsname</string>
+    <string name="ip_address">ip_address</string>
+    <string name="color_key">color</string>
+    <string name="brightness">brightness</string>
+    <string name="is_active">active</string>
+    <string name="saved_high_score_key">highscore</string>
+    <string name="title_activity_journal_list">Journal Entries</string>
+    <string name="title_activity_journal_detail">Entry Detail</string>
+    <string name="entry_label">%1$d: %2$s - %3$d</string>
+    <string name="get_image">Get Image</string>
+    <string name="journal_entry">Journal Entry</string>
+    <string name="menu_save_title">SAVE</string>
+</resources>

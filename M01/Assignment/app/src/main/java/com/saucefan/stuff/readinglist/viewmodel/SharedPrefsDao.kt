@@ -11,13 +11,11 @@ class SharedPrefsDao (context:Context) : StorageInterface{
 
 
     companion object {
-        const val NEXT_IDS="NEXTIDS"
         const val ID_LIST_KEY="IDLIST"
-        const val INVALID_ID=-1
         const val ENTRY_ID_PREFIX ="liquid"
         const val READING_PREFS="SAUCE"
     }
-
+    private val sharedPrefs: SharedPreferences = context.getSharedPreferences(READING_PREFS, Context.MODE_PRIVATE)
     fun readEntry (id:Int):Book? {
         val entryAsCsv:String = sharedPrefs.getString(ENTRY_ID_PREFIX+id,"Invalid id") as String
         var book = Book(entryAsCsv)
@@ -42,7 +40,6 @@ class SharedPrefsDao (context:Context) : StorageInterface{
         }else {
             val editor = sharedPrefs.edit()
             var nextID = book.id
-
             ids.add(book.id.toString())
             var newIdList = StringBuilder()
             for (id in ids) {
@@ -54,13 +51,12 @@ class SharedPrefsDao (context:Context) : StorageInterface{
 
             //should equal ids + "," like "0,1,2,etc"
             editor.putString(ID_LIST_KEY, newIdList.toString())
-
             editor.putString(ENTRY_ID_PREFIX + book.id, book.toCsvString())
             editor.commit()
         }
     }
 
-        val sharedPrefs: SharedPreferences = context.getSharedPreferences(READING_PREFS, Context.MODE_PRIVATE)
+
 
 
 

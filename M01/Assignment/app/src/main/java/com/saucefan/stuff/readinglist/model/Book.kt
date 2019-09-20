@@ -1,5 +1,7 @@
 package com.saucefan.stuff.readinglist.model
 
+import com.google.gson.Gson
+import com.google.gson.JsonElement
 import com.saucefan.stuff.readinglist.viewmodel.BookRepo.getNewID
 import org.json.JSONException
 import org.json.JSONObject
@@ -16,24 +18,28 @@ class Book: Serializable
     var id: Int = 0
 
     //i don't think this would ever even come up thanks to gson but we'll leave it for now i suppose
+    //yep greyed out, why reinvent the wheel?
     constructor(jsonObject: JSONObject) {
-        try{
-        this.title =jsonObject.getString("title")
-        }catch (e:JSONException) {
-            this.title="badjson"
+
+            try {
+                this.title = jsonObject.getString("title")
+            } catch (e: JSONException) {
+                this.title = "badjson"
+            }
+            try {
+                this.reasonToRead = jsonObject.getString("reasonToRead")
+            } catch (e: JSONException) {
+                this.reasonToRead = "badjson"
+            }
+            try {
+                this.hasBeenRead = jsonObject.getBoolean("hasBeenRead")
+            } catch (e: JSONException) {
+                this.hasBeenRead = false
+            }
+            this.id=getNewID()
         }
-        try {
-            this.reasonToRead = jsonObject.getString("reasonToRead")
-        }catch (e:JSONException) {
-            this.reasonToRead="badjson"
-        }
-        try{
-        this.hasBeenRead=jsonObject.getBoolean("hasBeenRead")
-    }catch (e:JSONException) {
-    this.hasBeenRead=false
-}
-        this.id=getNewID()
-    }
+
+
 
     constructor(
         title:String,
