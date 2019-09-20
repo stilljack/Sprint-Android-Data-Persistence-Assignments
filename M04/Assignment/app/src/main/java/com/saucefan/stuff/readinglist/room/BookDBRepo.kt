@@ -14,13 +14,12 @@ class BookDBRepo (val context: Context) : StorageInterface {
     }
 
     override fun updateEntry(book: Book) {
-        database.bookDBDAO().createEntry(book)
+        database.bookDBDAO().updateEntry(book)
     }
 
     override fun deleteEntry(book: Book) {
         database.bookDBDAO().deleteEntry(book)
     }
-
 
     override fun readAllEntries(): LiveData<List<Book>> {
         return database.bookDBDAO().readAllEntries()

@@ -6,7 +6,7 @@ import com.saucefan.stuff.readinglist.viewmodel.StorageInterface
 import timber.log.Timber
 
 val repo: StorageInterface by lazy {
-    App.repo!!
+    ReadingList.repo!!
 }
 class MyDebugTree : Timber.DebugTree() {
     override fun createStackElementTag(element: StackTraceElement): String? {
@@ -19,7 +19,7 @@ class MyDebugTree : Timber.DebugTree() {
     }
 }
 
-class App : Application() {
+class ReadingList : Application() {
     companion object {
       //  var prefs: SharedPrefsDao? = null
        // var localFiles: LocalFiles? =null

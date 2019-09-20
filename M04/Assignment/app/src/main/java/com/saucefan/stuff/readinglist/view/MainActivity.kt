@@ -8,12 +8,9 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.saucefan.stuff.readinglist.App
 import com.saucefan.stuff.readinglist.R
 import com.saucefan.stuff.readinglist.model.Book
-import com.saucefan.stuff.readinglist.room.BookDBRepo
 import com.saucefan.stuff.readinglist.viewmodel.BookRepo.entryList
-import com.saucefan.stuff.readinglist.viewmodel.BookRepo.getNewID
 import com.saucefan.stuff.readinglist.viewmodel.BookRepo.randBook
 import com.saucefan.stuff.readinglist.viewmodel.BookViewModel
 import kotlinx.android.synthetic.main.activity_main.*
@@ -60,6 +57,10 @@ import java.lang.ref.WeakReference
 
 
 class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionListener {
+    override fun onFragUpdate(book: Book) {
+        UpdateAsyncTask(viewModel).execute(book)
+    }
+
     lateinit var viewModel: BookViewModel
 
     override fun onDelete(book: Book) {
@@ -119,9 +120,10 @@ class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionList
         val manager = supportFragmentManager
         val transaction = manager.beginTransaction()
         val bundle = Bundle()
+        val isUpdate = true
         bundle.putSerializable(EDIT_BOOK, book)
         frag.arguments = bundle
-        transaction.add(frag, "Edit Fragment")
+        transaction.add(frag, "isUpdate")
         transaction.commit()
     }
 
@@ -180,13 +182,10 @@ class MainActivity : AppCompatActivity(), EditFragment.OnFragmentInteractionList
     }
 
     class ReadAllAsyncTask(activity: MainActivity) : AsyncTask<Void, Void, LiveData<List<Book>>?>() {
-
         private val activity = WeakReference(activity)
-
         override fun doInBackground(vararg entries: Void?): LiveData<List<Book>>? {
             return activity.get()?.viewModel?.entries
         }
-
         override fun onPostExecute(result: LiveData<List<Book>>?) {
             activity.get()?.let { act ->
                 result?.let { entries ->

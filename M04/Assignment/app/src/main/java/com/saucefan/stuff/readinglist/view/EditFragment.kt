@@ -90,20 +90,20 @@ class EditFragment : DialogFragment() {
                 if(book?.hasBeenRead as Boolean) {
                  //   chkbox.background=resources.getDrawable(R.color.bgRegular)
                     fragcl.background=resources.getDrawable(R.color.bgRegular)
-                    //chkbox.isChecked=false
-                   // chkbox.invalidate()
                     book?.hasBeenRead=false //?: i("failure at chkbox")
                 }else {
                 //    chkbox.background = resources.getDrawable(R.color.bgHightlight)
                     fragcl.background = resources.getDrawable(R.color.bgHightlight)
-                   // chkbox.isChecked=true
-                    //chkbox.invalidate()
                     book?.hasBeenRead=true// ?: i("failure at chkbox")
                 }
             }
         } ?: Toast.makeText(view.context,"book ain't good like",Toast.LENGTH_SHORT).show(); Timber.e("$book book is empty or bad")
    btn_submit.setOnClickListener(){
-       listener?.onFragSave(returnData(book as Book)) ?:Timber.e("THE LISTENER AIN'T A WORKING")
+       if (this.tag == "isUpdate"){
+           listener?.onFragUpdate(returnData(book as Book)) ?:Timber.e("error in listener on update")
+       }else {
+           listener?.onFragSave(returnData(book as Book)) ?: Timber.e("error in listener on create")
+       }
    }
         btn_delete.setOnClickListener{
             listener?.onDelete(book as Book)
@@ -112,9 +112,6 @@ class EditFragment : DialogFragment() {
 
     }
 
-    fun onButtonPressed(book: Book) {
-        listener?.onFragSave(book)
-    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -134,6 +131,7 @@ class EditFragment : DialogFragment() {
     interface OnFragmentInteractionListener {
         fun onFragSave(book: Book)
         fun onDelete(book:Book)
+        fun onFragUpdate(book:Book)
     }
 
     companion object {

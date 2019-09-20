@@ -13,10 +13,12 @@ interface BookDBDAO {
     fun createEntry(book: Book)
     @Query("SELECT * FROM book")
     fun readAllEntries(): LiveData<List<Book>>
-    @Update(onConflict = OnConflictStrategy.REPLACE)
+    @Update(onConflict = OnConflictStrategy.ABORT)
     fun updateEntry(book: Book)
     @Delete
-    fun deleteEntry(book: Book)
+    fun deleteEntry(sauce: Book)
+    @Query("DELETE FROM book where id is :sauce")
+    fun sauc(sauce: Int)
 
 
 
