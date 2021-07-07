@@ -1,0 +1,34 @@
+  
+CREATE TABLE PLAYERS (
+ id INTEGER PRIMARY KEY,
+ first_name TEXT,
+ last_name TEXT,
+ age INTEGER,
+ team integer,
+ FOREIGN KEY(team) REFERENCES TEAMS(id)
+);
+
+CREATE TABLE TEAMS (
+ id INTEGER PRIMARY KEY,
+ team_name TEXT,
+ location TEXT,
+ founded INTEGER
+);
+
+INSERT INTO PLAYERS (id, first_name,last_name,age,team)
+VALUES (1,"jack","seymour",6,1);
+INSERT INTO PLAYERS (id, first_name,last_name,age,team)
+VALUES (2,"jOHN","stamos",4,3);
+INSERT INTO PLAYERS (id, first_name,last_name,age,team)
+VALUES (3,"OTHER","GUYONFULLHOUSE",12,4);
+INSERT INTO PLAYERS (id, first_name,last_name,age,team)
+VALUES (42,"1337","HAX0R",30000,2);
+
+INSERT INTO TEAMS (id, team_name,location,founded)
+VALUES (1,"the losers","usa",1985);
+INSERT INTO TEAMS (id, team_name,location,founded)
+VALUES (2,"THE DORKS","cambodia",1999);
+INSERT INTO TEAMS (id, team_name,location,founded)
+VALUES (3,"the nerds","not mexico",1980);
+INSERT INTO TEAMS (id, team_name,location,founded)
+VALUES (4,"the also-rans","canada",1972);
